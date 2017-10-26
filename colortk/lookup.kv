@@ -1,0 +1,44 @@
+<LookupScreen>:
+    Widget:
+        size_hint: 0.5, 0.2
+        pos_hint: {'center_x': 0.5, 'center_y': 0.8}
+        canvas:
+            Color:
+                rgba: self.parent.color
+            Rectangle:
+                pos: self.pos
+                size: self.size
+
+    GridLayout:
+        cols: 4
+        rows: 4
+        size_hint: 0.8, 0.5
+        pos_hint: {'center_x': 0.5, 'center_y': 0.2}
+        Label:
+            text: 'R'
+        Label:
+            text: 'G'
+        Label:
+            text: 'B'
+        Label:
+            text: 'H'
+        Label:
+            text: 'S'
+        Label:
+            text: 'V'
+        Label:
+            text: 'H'
+        Label:
+            text: 'S'
+        Label:
+            text: 'L'
+        Label:
+            text: 'C'
+        Label:
+            text: 'M'
+        Label:
+            text: 'Y'
+        Label:
+            text: 'K'
+        Label:
+            text: 'HEX'
