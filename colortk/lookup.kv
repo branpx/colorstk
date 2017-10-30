@@ -1,7 +1,14 @@
 <LookupScreen>:
+    canvas:
+        Color:
+            rgba: 0, 0, 0, 1
+        Rectangle:
+            pos: self.pos
+            size: self.size
+
     Widget:
         size_hint: 0.5, 0.2
-        pos_hint: {'center_x': 0.5, 'center_y': 0.8}
+        pos_hint: {'center_x': 0.5, 'center_y': 0.85}
         canvas:
             Color:
                 rgba: self.parent.color
@@ -9,36 +16,100 @@
                 pos: self.pos
                 size: self.size
 
-    GridLayout:
-        cols: 4
-        rows: 4
-        size_hint: 0.8, 0.5
-        pos_hint: {'center_x': 0.5, 'center_y': 0.2}
-        Label:
-            text: 'R'
-        Label:
-            text: 'G'
-        Label:
-            text: 'B'
-        Label:
-            text: 'H'
-        Label:
-            text: 'S'
-        Label:
-            text: 'V'
-        Label:
-            text: 'H'
-        Label:
-            text: 'S'
-        Label:
-            text: 'L'
-        Label:
-            text: 'C'
-        Label:
-            text: 'M'
-        Label:
-            text: 'Y'
-        Label:
-            text: 'K'
-        Label:
-            text: 'HEX'
+    Label:
+        text: self.parent.color_name
+        size_hint: 0.1, 0.1
+        pos_hint: {'center_x': 0.5, 'center_y': 0.7}
+
+    ScrollView:
+        size_hint: 0.4, 0.5
+        pos_hint: {'center_x': 0.3, 'center_y': 0.4}
+
+        canvas.before:
+            Color:
+                rgba: 0.2, 0.2, 0.2, 1
+            Rectangle:
+                pos: self.pos
+                size: self.size
+
+        StackLayout:
+            #orientation: 'vertical'
+            size_hint_y: None
+            size_hint_min_x: 250
+            height: 700
+            pos_hint: {'center_x': 0.5, 'center_y': 0.4}
+
+            canvas:
+                Color:
+                    rgba: 0.05, 0.05, 0.05, 1
+                Rectangle:
+                    pos: self.pos
+                    size: self.size
+
+            ValueDisplay:
+                text: 'RGB'
+            ValueDisplay:
+                text: 'HSV'
+            ValueDisplay:
+                text: 'HSL'
+            ValueDisplay:
+                text: 'XYZ'
+            ValueDisplay:
+                text: 'CMYK'
+                ValueInput:
+            HexDisplay:
+
+    ScrollView:
+        size_hint: 0.4, 0.5
+        pos_hint: {'center_x': 0.7, 'center_y': 0.4}
+
+        canvas.before:
+            Color:
+                rgba: 0.2, 0.2, 0.2, 1
+            Rectangle:
+                pos: self.pos
+                size: self.size
+
+
+<ValueDisplay@StackLayout>:
+    text: ''
+
+    size_hint: 1, None
+    height: 100
+
+    Label:
+        size_hint: 0.1, 0.3
+        size_hint_min_x: 50
+        text: self.parent.text
+    ValueInput:
+    ValueInput:
+    ValueInput:
+
+
+<HexDisplay@StackLayout>:
+    size_hint: 1, None
+    height: 100
+
+    canvas:
+        Color:
+            rgba: 0.1, 0.1, 0.1, 1
+        Rectangle:
+            pos: self.pos
+            size: self.size
+
+    Label:
+        size_hint: 0.1, 0.3
+        size_hint_min_x: 50
+        text: '#'
+    ValueInput:
+
+
+<ValueInput@TextInput>:
+    size_hint: None, 0.3
+    width: self.height * 1.5
+    font_size: self.width / 2
+    padding: self.width/10, 0
+    cursor_color: 0, 0, 0, 1
+    multiline: False
+    write_tab: False
+    input_filter: 'float'

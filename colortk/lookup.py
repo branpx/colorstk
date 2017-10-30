@@ -7,3 +7,4 @@ Builder.load_file('lookup.kv')
 
 class LookupScreen(Screen):
     color = (1, 0, 0, 1)
+    color_name = 'Red'
