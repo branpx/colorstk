@@ -1,4 +1,6 @@
 <LookupScreen>:
+    id: lookup_screen
+
     canvas:
         Color:
             rgba: 0.05, 0.05, 0.05, 1
@@ -9,15 +11,16 @@
     Widget:
         size_hint: 0.5, 0.2
         pos_hint: {'center_x': 0.5, 'center_y': 0.85}
+
         canvas:
             Color:
-                rgb: self.parent.srgb
+                rgb: lookup_screen.srgb
             Rectangle:
                 pos: self.pos
                 size: self.size
 
     Label:
-        text: self.parent.color_name
+        text: lookup_screen.color_name
         size_hint: 0.1, 0.1
         pos_hint: {'center_x': 0.5, 'center_y': 0.7}
 
@@ -47,25 +50,62 @@
                     pos: self.pos
                     size: self.size
 
-            HexDisplay:
+            ValueDisplay:
+                text: '#'
+                ValueInput:
+                    width: 90
+                    input_filter: None
             ValueDisplay:
                 text: 'sRGB'
+                ValueInput:
+                    text: str(int(lookup_screen.srgb[0]*255))
+                    on_text_validate: lookup_screen.srgb[0] = float(self.text) / 255
+                ValueInput:
+                    text: str(int(lookup_screen.srgb[1]*255))
+                    on_text_validate: lookup_screen.srgb[1] = float(self.text) / 255
+                ValueInput:
+                    text: str(int(lookup_screen.srgb[2]*255))
+                    on_text_validate: lookup_screen.srgb[2] = float(self.text) / 255
             ValueDisplay:
                 text: 'HSL'
+                ValueInput:
+                ValueInput:
+                ValueInput:
             ValueDisplay:
                 text: 'HSV'
+                ValueInput:
+                ValueInput:
+                ValueInput:
             ValueDisplay:
                 text: 'YIQ'
+                ValueInput:
+                ValueInput:
+                ValueInput:
             ValueDisplay:
                 text: 'YUV'
+                ValueInput:
+                ValueInput:
+                ValueInput:
             ValueDisplay:
                 text: 'RYB'
+                ValueInput:
+                ValueInput:
+                ValueInput:
             ValueDisplay:
                 text: 'CIE-XYZ'
+                ValueInput:
+                ValueInput:
+                ValueInput:
             ValueDisplay:
                 text: 'CIE-LAB'
+                ValueInput:
+                ValueInput:
+                ValueInput:
             ValueDisplay:
                 text: 'CMYK'
+                ValueInput:
+                ValueInput:
+                ValueInput:
                 ValueInput:
 
     ScrollView:
@@ -90,22 +130,6 @@
         size_hint_x: None
         width: 75
         text: self.parent.text
-    ValueInput:
-    ValueInput:
-    ValueInput:
-
-
-<HexDisplay@StackLayout>:
-    size_hint: 1, None
-    height: 30
-
-    Label:
-        size_hint_x: None
-        width: 75
-        text: '#'
-    ValueInput:
-        width: 90
-        input_filter: None
 
 
 <ValueInput@TextInput>:
