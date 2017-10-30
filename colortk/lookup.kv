@@ -1,7 +1,7 @@
 <LookupScreen>:
     canvas:
         Color:
-            rgba: 0, 0, 0, 1
+            rgba: 0.05, 0.05, 0.05, 1
         Rectangle:
             pos: self.pos
             size: self.size
@@ -11,7 +11,7 @@
         pos_hint: {'center_x': 0.5, 'center_y': 0.85}
         canvas:
             Color:
-                rgba: self.parent.color
+                rgb: self.parent.srgb
             Rectangle:
                 pos: self.pos
                 size: self.size
@@ -33,31 +33,40 @@
                 size: self.size
 
         StackLayout:
-            #orientation: 'vertical'
             size_hint_y: None
-            size_hint_min_x: 250
-            height: 700
+            size_hint_min_x: 255
+            height: len(self.children) * 80
             pos_hint: {'center_x': 0.5, 'center_y': 0.4}
+            spacing: 50
+            padding: 0, 25
 
             canvas:
                 Color:
-                    rgba: 0.05, 0.05, 0.05, 1
+                    rgba: 0.1, 0.1, 0.1, 1
                 Rectangle:
                     pos: self.pos
                     size: self.size
 
+            HexDisplay:
             ValueDisplay:
-                text: 'RGB'
-            ValueDisplay:
-                text: 'HSV'
+                text: 'sRGB'
             ValueDisplay:
                 text: 'HSL'
             ValueDisplay:
-                text: 'XYZ'
+                text: 'HSV'
+            ValueDisplay:
+                text: 'YIQ'
+            ValueDisplay:
+                text: 'YUV'
+            ValueDisplay:
+                text: 'RYB'
+            ValueDisplay:
+                text: 'CIE-XYZ'
+            ValueDisplay:
+                text: 'CIE-LAB'
             ValueDisplay:
                 text: 'CMYK'
                 ValueInput:
-            HexDisplay:
 
     ScrollView:
         size_hint: 0.4, 0.5
@@ -75,11 +84,11 @@
     text: ''
 
     size_hint: 1, None
-    height: 100
+    height: 30
 
     Label:
-        size_hint: 0.1, 0.3
-        size_hint_min_x: 50
+        size_hint_x: None
+        width: 75
         text: self.parent.text
     ValueInput:
     ValueInput:
@@ -88,27 +97,22 @@
 
 <HexDisplay@StackLayout>:
     size_hint: 1, None
-    height: 100
-
-    canvas:
-        Color:
-            rgba: 0.1, 0.1, 0.1, 1
-        Rectangle:
-            pos: self.pos
-            size: self.size
+    height: 30
 
     Label:
-        size_hint: 0.1, 0.3
-        size_hint_min_x: 50
+        size_hint_x: None
+        width: 75
         text: '#'
     ValueInput:
+        width: 90
+        input_filter: None
 
 
 <ValueInput@TextInput>:
-    size_hint: None, 0.3
-    width: self.height * 1.5
-    font_size: self.width / 2
-    padding: self.width/10, 0
+    size_hint_x: None
+    width: 45
+    font_size: 21
+    padding: 5, 3
     cursor_color: 0, 0, 0, 1
     multiline: False
     write_tab: False
