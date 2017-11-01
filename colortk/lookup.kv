@@ -1,6 +1,4 @@
 <LookupScreen>:
-    id: lookup_screen
-
     canvas:
         Color:
             rgba: 0.05, 0.05, 0.05, 1
@@ -14,13 +12,13 @@
 
         canvas:
             Color:
-                rgb: lookup_screen.srgb
+                rgb: self.parent.srgb[1:]
             Rectangle:
                 pos: self.pos
                 size: self.size
 
     Label:
-        text: lookup_screen.color_name
+        text: self.parent.color_name
         size_hint: 0.1, 0.1
         pos_hint: {'center_x': 0.5, 'center_y': 0.7}
 
@@ -36,6 +34,7 @@
                 size: self.size
 
         StackLayout:
+            id: value_stack
             size_hint_y: None
             size_hint_min_x: 255
             height: len(self.children) * 80
@@ -50,64 +49,6 @@
                     pos: self.pos
                     size: self.size
 
-            ValueDisplay:
-                text: '#'
-                ValueInput:
-                    width: 90
-                    input_filter: None
-            ValueDisplay:
-                text: 'sRGB'
-                ValueInput:
-                    text: str(int(lookup_screen.srgb[0]*255))
-                    on_text_validate: lookup_screen.srgb[0] = float(self.text) / 255
-                ValueInput:
-                    text: str(int(lookup_screen.srgb[1]*255))
-                    on_text_validate: lookup_screen.srgb[1] = float(self.text) / 255
-                ValueInput:
-                    text: str(int(lookup_screen.srgb[2]*255))
-                    on_text_validate: lookup_screen.srgb[2] = float(self.text) / 255
-            ValueDisplay:
-                text: 'HSL'
-                ValueInput:
-                ValueInput:
-                ValueInput:
-            ValueDisplay:
-                text: 'HSV'
-                ValueInput:
-                ValueInput:
-                ValueInput:
-            ValueDisplay:
-                text: 'YIQ'
-                ValueInput:
-                ValueInput:
-                ValueInput:
-            ValueDisplay:
-                text: 'YUV'
-                ValueInput:
-                ValueInput:
-                ValueInput:
-            ValueDisplay:
-                text: 'RYB'
-                ValueInput:
-                ValueInput:
-                ValueInput:
-            ValueDisplay:
-                text: 'CIE-XYZ'
-                ValueInput:
-                ValueInput:
-                ValueInput:
-            ValueDisplay:
-                text: 'CIE-LAB'
-                ValueInput:
-                ValueInput:
-                ValueInput:
-            ValueDisplay:
-                text: 'CMYK'
-                ValueInput:
-                ValueInput:
-                ValueInput:
-                ValueInput:
-
     ScrollView:
         size_hint: 0.4, 0.5
         pos_hint: {'center_x': 0.7, 'center_y': 0.4}
@@ -120,19 +61,17 @@
                 size: self.size
 
 
-<ValueDisplay@StackLayout>:
-    text: ''
-
+<ValueDisplay>:
     size_hint: 1, None
     height: 30
 
     Label:
+        id: value_label
         size_hint_x: None
         width: 75
-        text: self.parent.text
 
 
-<ValueInput@TextInput>:
+<ValueInput>:
     size_hint_x: None
     width: 45
     font_size: 21
