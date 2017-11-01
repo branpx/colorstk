@@ -81,7 +81,10 @@ class ValueInput(TextInput):
         self.text = str(value[index])
 
     def on_focus(self, instance, focused):
-        if not focused and self.text:
+        if (not focused and self.text and
+            float(self.text) != self.value[self.index]):
             self.value[self.index] = float(self.text)
-        else:
-            self.text = str(self.value[self.index])
+        self.text = str(self.value[self.index])
+
+    def is_valid(self):
+        pass
