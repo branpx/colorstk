@@ -17,78 +17,26 @@ Builder.load_file('lookup.kv')
 
 
 class LookupScreen(Screen):
-    rgbhex = ListProperty(('ffffff'))
-    srgb = ListProperty()
     color_name = StringProperty(('<COLOR NAME>'))
+    color = ObjectProperty()
 
     def __init__(self, **kwargs):
         self.color = grapefruit.Color((1, 1, 1))
-        self.srgb = list(self.color.rgb)
         super().__init__(**kwargs)
-        self.color_values = OrderedDict(sRGB=self.srgb,
-                                        HSL=self.color.hsl,
-                                        HSV=self.color.hsv,
-                                        YIQ=self.color.yiq,
-                                        YUV=self.color.yuv,
-                                        CIE_XYZ=self.color.xyz,
-                                        CIE_LAB=self.color.lab,
-                                        CMY=self.color.cmy,
-                                        CMYK=self.color.cmyk)
-        self.value_displays = []
+        displays = [('sRGB', self.color.rgb), ('HSL', self.color.hsl),
+                    ('HSV', self.color.hsv), ('YIQ', self.color.yiq),
+                    ('YUV', self.color.yuv), ('CIE-XYZ', self.color.xyz),
+                    ('CIE-LAB', self.color.lab), ('CMY', self.color.cmy),
+                    ('CMYK', self.color.cmyk)]
+        self.color_values = OrderedDict(displays)
         for color_space, value in self.color_values.items():
-            value_display = ValueDisplay(self.color, value, color_space)
-            self.ids.value_stack.add_widget(value_display)
-            self.value_displays.append(value_display)
+            self.ids.value_stack.add_widget(
+                ValueDisplay(self, color_space, value))
 
-
-class ValueDisplay(StackLayout):
-    value_displays = []
-
-    def __init__(self, color, value, color_space, **kwargs):
-        super().__init__(**kwargs)
-        self.value_displays.append(self)
-        self.color = color
-        if color_space == 'sRGB':
-            self.value = value
-        else:
-            self.value = list(value)
-        self.color_space = color_space
-        self.ids.value_label.text = color_space
-        self.value_inputs = []
-        for index in range(len(value)):
-            value_input = ValueInput(index, text=str(self.value[index]))
-            self.add_widget(value_input)
-            self.value_inputs.append(value_input)
-
-    def update_inputs(self):
-        for value_input in self.value_inputs:
-            value_input.text = str(self.value[value_input.index])
-
-    def update_color(self):
-        if self.color_space == 'sRGB':
-            self.color.rgb = self.value
-        elif self.color_space == 'HSL':
-            self.color.hsl = self.value
-        elif self.color_space == 'HSV':
-            self.color.hsv = self.value
-        elif self.color_space == 'YIQ':
-            self.color.yiq = self.value
-        elif self.color_space == 'YUV':
-            self.color.yuv = self.value
-        elif self.color_space == 'CIE_XYZ':
-            self.color.xyz = self.value
-        elif self.color_space == 'CIE_LAB':
-            self.color.lab = self.value
-        elif self.color_space == 'CMY':
-            self.color.cmy = self.value
-        elif self.color_space == 'CMYK':
-            self.color.cmyk = self.value
-        self.update_values()
-
-    def update_values(self):
-        for value_display in self.value_displays:
+    def on_color(self, instance, color):
+        for value_display in self.ids.value_stack.children:
             if value_display.color_space == 'sRGB':
-                value_display.value[:] = list(self.color.rgb)
+                value_display.value = list(self.color.rgb)
             elif value_display.color_space == 'HSL':
                 value_display.value = list(self.color.hsl)
             elif value_display.color_space == 'HSV':
@@ -97,15 +45,55 @@ class ValueDisplay(StackLayout):
                 value_display.value = list(self.color.yiq)
             elif value_display.color_space == 'YUV':
                 value_display.value = list(self.color.yuv)
-            elif value_display.color_space == 'CIE_XYZ':
+            elif value_display.color_space == 'CIE-XYZ':
                 value_display.value = list(self.color.xyz)
-            elif value_display.color_space == 'CIE_LAB':
+            elif value_display.color_space == 'CIE-LAB':
                 value_display.value = list(self.color.lab)
             elif value_display.color_space == 'CMY':
                 value_display.value = list(self.color.cmy)
             elif value_display.color_space == 'CMYK':
                 value_display.value = list(self.color.cmyk)
             value_display.update_inputs()
+
+
+class ValueDisplay(StackLayout):
+    def __init__(self, lookup_screen, color_space, value, **kwargs):
+        self.color_space = color_space
+        self.color = lookup_screen.color
+        self.lookup_screen = lookup_screen
+        self.value = list(value)
+        super().__init__(**kwargs)
+        self.value_inputs = []
+        for index in range(len(value)):
+            value_input = ValueInput(
+                index, text=str(round(self.value[index], 3)))
+            self.add_widget(value_input)
+            self.value_inputs.append(value_input)
+
+    def update_inputs(self):
+        for value_input in self.value_inputs:
+            value_input.text = str(round(self.value[value_input.index], 3))
+
+    def update_color(self):
+        if self.color_space == 'sRGB':
+            self.lookup_screen.color = grapefruit.Color.from_rgb(*self.value)
+        elif self.color_space == 'HSL':
+            self.lookup_screen.color = grapefruit.Color.from_hsl(*self.value)
+        elif self.color_space == 'HSV':
+            self.lookup_screen.color = grapefruit.Color.from_hsv(*self.value)
+        elif self.color_space == 'YIQ':
+            self.lookup_screen.color = grapefruit.Color.from_yiq(*self.value)
+        elif self.color_space == 'YUV':
+            self.lookup_screen.color = grapefruit.Color.from_yuv(*self.value)
+        elif self.color_space == 'CIE-XYZ':
+            self.lookup_screen.color = grapefruit.Color.from_xyz(*self.value)
+        elif self.color_space == 'CIE-LAB':
+            self.lookup_screen.color = grapefruit.Color.from_lab(*self.value)
+        elif self.color_space == 'CMY':
+            self.lookup_screen.color = grapefruit.Color.from_cmy(*self.value)
+        elif self.color_space == 'CMYK':
+            self.lookup_screen.color = grapefruit.Color.from_cmyk(*self.value)
+        self.color = self.lookup_screen.color
 
 
 class ValueInput(TextInput):
@@ -115,8 +103,8 @@ class ValueInput(TextInput):
 
     def on_focus(self, instance, focused):
         if (not focused and self.text and
-            float(self.text) != self.parent.value[self.index]):
+            float(self.text) != round(self.parent.value[self.index], 3)):
             self.parent.value[self.index] = float(self.text)
             self.parent.update_color()
         else:
-            self.text = str(self.parent.value[self.index])
+            self.text = str(round(self.parent.value[self.index], 3))
