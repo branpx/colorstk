@@ -66,13 +66,14 @@ class ValueDisplay(StackLayout):
         self.value_inputs = []
         for index in range(len(value)):
             value_input = ValueInput(
-                index, text=str(round(self.value[index], 3)))
+                index, text=ValueInput.format_value(self.value[index]))
             self.add_widget(value_input)
             self.value_inputs.append(value_input)
 
     def update_inputs(self):
         for value_input in self.value_inputs:
-            value_input.text = str(round(self.value[value_input.index], 3))
+            value_input.text = value_input.format_value(
+                self.value[value_input.index])
 
     def update_color(self):
         if self.color_space == 'sRGB':
@@ -103,8 +104,13 @@ class ValueInput(TextInput):
 
     def on_focus(self, instance, focused):
         if (not focused and self.text and
-            float(self.text) != round(self.parent.value[self.index], 3)):
+                self.text != self.format_value(self.parent.value[self.index])):
             self.parent.value[self.index] = float(self.text)
             self.parent.update_color()
         else:
-            self.text = str(round(self.parent.value[self.index], 3))
+            self.text = self.format_value(self.parent.value[self.index])
+
+    @staticmethod
+    def format_value(value, digits=4):
+        formatter = '{:.' + str(digits) + '}'
+        return formatter.format(round(value, digits) + 0)
