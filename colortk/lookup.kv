@@ -17,13 +17,8 @@
                 pos: self.pos
                 size: self.size
 
-    Label:
-        text: self.parent.color_name
-        size_hint: 0.1, 0.1
-        pos_hint: {'center_x': 0.5, 'center_y': 0.7}
-
     ScrollView:
-        size_hint: 0.4, 0.5
+        size_hint: 0.4, 0.6
         pos_hint: {'center_x': 0.3, 'center_y': 0.4}
 
         canvas.before:
@@ -36,7 +31,7 @@
         StackLayout:
             id: value_stack
             size_hint_y: None
-            size_hint_min_x: 375
+            size_hint_min_x: 355
             height: len(self.children) * 80
             pos_hint: {'center_x': 0.5, 'center_y': 0.4}
             spacing: 50
@@ -49,16 +44,22 @@
                     pos: self.pos
                     size: self.size
 
-    ScrollView:
-        size_hint: 0.4, 0.5
+    TabbedPanel:
+        size_hint: 0.4, 0.6
         pos_hint: {'center_x': 0.7, 'center_y': 0.4}
+        do_default_tab: False
+        tab_height: 30
 
-        canvas.before:
-            Color:
-                rgba: 0.2, 0.2, 0.2, 1
-            Rectangle:
-                pos: self.pos
-                size: self.size
+        TabbedPanelItem:
+            Label:
+                text: root.color_name
+                size_hint_y: 0.1
+                text_size: self.size
+                halign: 'left'
+                valign: 'center'
+                padding_x: 10
+        TabbedPanelItem:
+        TabbedPanelItem:
 
 
 <ValueDisplay>:
@@ -73,10 +74,28 @@
 
 <ValueInput>:
     size_hint_x: None
-    width: 75
+    width: 70
     font_size: 18
     padding: 4, 4
     cursor_color: 0, 0, 0, 1
     multiline: False
     write_tab: False
     input_filter: 'float'
+
+
+<TabbedPanelContent>:
+    canvas:
+        Color:
+            rgba: 0.2, 0.2, 0.2, 1
+        Rectangle:
+            pos: self.pos
+            size: self.size
+
+
+<StripLayout>:
+    canvas:
+        Color:
+            rgba: 0.1, 0.1, 0.1, 1
+        Rectangle:
+            pos: self.pos
+            size: self.size
