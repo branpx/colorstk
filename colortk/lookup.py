@@ -2,11 +2,7 @@ from collections import OrderedDict
 
 import grapefruit
 from kivy.lang.builder import Builder
-from kivy.properties import (DictProperty,
-                             ListProperty,
-                             NumericProperty,
-                             ObjectProperty,
-                             ReferenceListProperty,
+from kivy.properties import (ObjectProperty,
                              StringProperty)
 from kivy.uix.screenmanager import Screen
 from kivy.uix.stacklayout import StackLayout
@@ -23,11 +19,11 @@ class LookupScreen(Screen):
     def __init__(self, **kwargs):
         self.color = grapefruit.Color((1, 1, 1))
         super().__init__(**kwargs)
-        displays = [('sRGB', self.color.rgb), ('HSL', self.color.hsl),
-                    ('HSV', self.color.hsv), ('YIQ', self.color.yiq),
-                    ('YUV', self.color.yuv), ('CIE-XYZ', self.color.xyz),
-                    ('CIE-LAB', self.color.lab), ('CMY', self.color.cmy),
-                    ('CMYK', self.color.cmyk)]
+        displays = [('Hex', [self.color.html]), ('sRGB', self.color.ints),
+                    ('HSL', self.color.hsl), ('HSV', self.color.hsv),
+                    ('YIQ', self.color.yiq), ('YUV', self.color.yuv),
+                    ('CIE-XYZ', self.color.xyz), ('CIE-LAB', self.color.lab),
+                    ('CMY', self.color.cmy), ('CMYK', self.color.cmyk)]
         self.color_values = OrderedDict(displays)
         for color_space, value in self.color_values.items():
             self.ids.value_stack.add_widget(
@@ -35,8 +31,10 @@ class LookupScreen(Screen):
 
     def on_color(self, instance, color):
         for value_display in self.ids.value_stack.children:
-            if value_display.color_space == 'sRGB':
-                value_display.value = list(self.color.rgb)
+            if value_display.color_space == 'Hex':
+                value_display.value = [self.color.html]
+            elif value_display.color_space == 'sRGB':
+                value_display.value = list(self.color.ints)
             elif value_display.color_space == 'HSL':
                 value_display.value = list(self.color.hsl)
             elif value_display.color_space == 'HSV':
@@ -59,14 +57,16 @@ class LookupScreen(Screen):
 class ValueDisplay(StackLayout):
     def __init__(self, lookup_screen, color_space, value, **kwargs):
         self.color_space = color_space
-        self.color = lookup_screen.color
         self.lookup_screen = lookup_screen
         self.value = list(value)
         super().__init__(**kwargs)
         self.value_inputs = []
-        for index in range(len(value)):
-            value_input = ValueInput(
-                index, text=ValueInput.format_value(self.value[index]))
+        for index in range(len(self.value)):
+            if self.color_space == 'Hex':
+                value_input = ValueInput(0, width=90, input_filter=None)
+            else:
+                value_input = ValueInput(index)
+            value_input.text = value_input.format_value(self.value[index])
             self.add_widget(value_input)
             self.value_inputs.append(value_input)
 
@@ -76,7 +76,10 @@ class ValueDisplay(StackLayout):
                 self.value[value_input.index])
 
     def update_color(self):
-        if self.color_space == 'sRGB':
+        if self.color_space == 'Hex':
+            self.lookup_screen.color = grapefruit.Color.from_html(*self.value)
+        elif self.color_space == 'sRGB':
+            self.value = [val / 255 for val in self.value]
             self.lookup_screen.color = grapefruit.Color.from_rgb(*self.value)
         elif self.color_space == 'HSL':
             self.lookup_screen.color = grapefruit.Color.from_hsl(*self.value)
@@ -94,7 +97,6 @@ class ValueDisplay(StackLayout):
             self.lookup_screen.color = grapefruit.Color.from_cmy(*self.value)
         elif self.color_space == 'CMYK':
             self.lookup_screen.color = grapefruit.Color.from_cmyk(*self.value)
-        self.color = self.lookup_screen.color
 
 
 class ValueInput(TextInput):
@@ -105,12 +107,17 @@ class ValueInput(TextInput):
     def on_focus(self, instance, focused):
         if (not focused and self.text and
                 self.text != self.format_value(self.parent.value[self.index])):
-            self.parent.value[self.index] = float(self.text)
+            if self.parent.color_space == 'Hex':
+                self.parent.value = [self.text]
+            else:
+                self.parent.value[self.index] = float(self.text)
             self.parent.update_color()
         else:
             self.text = self.format_value(self.parent.value[self.index])
 
     @staticmethod
-    def format_value(value, digits=4):
-        formatter = '{:.' + str(digits) + '}'
-        return formatter.format(round(value, digits) + 0)
+    def format_value(val, digits=3):
+        if type(val) is str:
+            return val
+        formatter = '{:.' + str(digits) + 'g}'
+        return formatter.format(round(val, digits) + 0)

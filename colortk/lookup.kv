@@ -31,9 +31,8 @@
         StackLayout:
             id: value_stack
             size_hint_y: None
-            size_hint_min_x: 355
+            size_hint_min_x: 315
             height: len(self.children) * 80
-            pos_hint: {'center_x': 0.5, 'center_y': 0.4}
             spacing: 50
             padding: 0, 25
 
@@ -67,16 +66,16 @@
     height: 30
 
     Label:
+        text: self.parent.color_space
         size_hint_x: None
         width: 75
-        text: self.parent.color_space
 
 
 <ValueInput>:
     size_hint_x: None
-    width: 70
+    width: 60
     font_size: 18
-    padding: 4, 4
+    padding: 5, 4
     cursor_color: 0, 0, 0, 1
     multiline: False
     write_tab: False
