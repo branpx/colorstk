@@ -17,7 +17,7 @@ class LookupScreen(Screen):
     color = ObjectProperty()
 
     def __init__(self, **kwargs):
-        self.color = grapefruit.Color((1, 1, 1))
+        self.color = grapefruit.Color((0, 0, 0))
         super().__init__(**kwargs)
         displays = [('Hex', [self.color.html]), ('sRGB', self.color.ints),
                     ('HSL', self.color.hsl), ('HSV', self.color.hsv),
