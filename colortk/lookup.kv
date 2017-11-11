@@ -1,6 +1,3 @@
-#:import grapefruit grapefruit
-
-
 <LookupScreen>:
     BoxLayout:
         padding: 20
@@ -20,10 +17,11 @@
                     pos: self.pos
                     size: self.size
 
-            StackLayout:
-                id: value_stack
-                size_hint_y: None
-                size_hint_min_x: 315
+            GridLayout:
+                id: value_grid
+                cols: 1
+                size_hint: None, None
+                width: self.minimum_width
                 height: self.minimum_height
                 spacing: 50
                 padding: 0, 25
@@ -75,7 +73,9 @@
 
 
 <ValueDisplay>:
-    size_hint: 1, None
+    rows: 1
+    size_hint: None, None
+    width: self.minimum_width
     height: 30
 
     Label:
