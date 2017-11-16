@@ -31,39 +31,41 @@
             tab_height: 30
 
             TabbedPanelItem:
-                text: 'General'
+                text: 'Info'
 
                 ScrollView:
                     GridLayout:
                         cols: 1
-                        size_hint_y: None
-                        size_hint_min_x: 250
+                        size_hint: None, None
+                        width: self.minimum_width
                         height: self.minimum_height
                         spacing: 25
                         padding: 25, 25
 
-                        Widget:
-                            size_hint: None, None
-                            size: 100, 50
-
-                            canvas:
-                                Color:
-                                    rgba: root.color
-                                Rectangle:
-                                    pos: self.pos
-                                    size: self.size
+                        ColorBox:
+                            size: 200, 100
+                            lookup_screen: root
+                            color: root.color
 
                         InfoLabel:
                             text: 'Color Name: ' + root.color_name
 
                         InfoLabel:
-                            text: 'RYB Hue: '
+                            text: 'Websafe: ' + getattr(root.websafe_color, 'html')
+
+                        ColorBox:
+                            lookup_screen: root
+                            color: root.websafe_color
 
                         InfoLabel:
-                            text: 'Websafe: '
+                            text: 'Greyscale: ' + getattr(root.greyscale_color, 'html')
+
+                        ColorBox:
+                            lookup_screen: root
+                            color: root.greyscale_color
 
                         InfoLabel:
-                            text: 'Greyscale: '
+                            text: 'RYB Hue: ' + str(root.ryb_hue)
 
             TabbedPanelItem:
                 text: 'Schemes'
@@ -112,9 +114,30 @@
             pos: self.pos
             size: self.size
 
+
+<ColorBox>:
+    size_hint: None, None
+    size: 100, 50
+
+    canvas:
+        Color:
+            rgba: self.color
+        Rectangle:
+            pos: self.pos
+            size: self.size
+
+    canvas.after:
+        Color:
+            rgba: 1, 1, 1, 0.25
+        Line:
+            rectangle: self.x, self.y, self.width, self.height
+            width: 2
+            joint: 'miter'
+
+
+
 <InfoLabel@Label>:
-    size_hint_y: None
-    height: 25
-    text_size: self.size
-    halign: 'left'
-    valign: 'center'
+    size_hint: None, None
+    text_size: None, 30
+    size: self.texture_size
+    valign: 'bottom'

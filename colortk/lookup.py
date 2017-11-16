@@ -3,21 +3,30 @@ from collections import OrderedDict
 import grapefruit
 from kivy.lang.builder import Builder
 from kivy.uix.gridlayout import GridLayout
-from kivy.properties import (ObjectProperty,
+from kivy.properties import (ListProperty,
+                             NumericProperty,
+                             ObjectProperty,
                              StringProperty)
 from kivy.uix.screenmanager import Screen
 from kivy.uix.textinput import TextInput
+from kivy.uix.widget import Widget
 
 
 Builder.load_file('lookup.kv')
 
 
 class LookupScreen(Screen):
-    color_name = StringProperty(('<COLOR NAME>'))
     color = ObjectProperty()
+    color_name = StringProperty()
+    websafe_color = ObjectProperty()
+    greyscale_color = ObjectProperty()
+    ryb_hue = NumericProperty()
+    named_colors = {value: name for name, value in
+                    grapefruit.NAMED_COLOR.items()}
 
     def __init__(self, **kwargs):
         self.color = grapefruit.Color((0, 0, 0))
+        self.set_color_info()
         super().__init__(**kwargs)
         displays = [('Hex', [self.color.html]), ('sRGB', self.color.ints),
                     ('HSL', self.color.hsl), ('HSV', self.color.hsv),
@@ -52,6 +61,13 @@ class LookupScreen(Screen):
             elif value_display.color_space == 'CMYK':
                 value_display.value = list(self.color.cmyk)
             value_display.update_inputs()
+        self.set_color_info()
+
+    def set_color_info(self):
+        self.color_name = self.named_colors.get(self.color.html, 'N/A')
+        self.websafe_color = grapefruit.Color(self.color.websafe)
+        self.greyscale_color = grapefruit.Color(self.color.greyscale)
+        self.ryb_hue = round(grapefruit.rgb_to_ryb(self.color.hsl_hue), 3)
 
 
 class ValueDisplay(GridLayout):
@@ -97,7 +113,6 @@ class ValueDisplay(GridLayout):
             self.lookup_screen.color = grapefruit.Color.from_cmy(*self.value)
         elif self.color_space == 'CMYK':
             self.lookup_screen.color = grapefruit.Color.from_cmyk(*self.value)
-        print(self.lookup_screen.color.is_legal)
 
 
 class ValueInput(TextInput):
@@ -152,3 +167,11 @@ class ValueInput(TextInput):
             return val
         formatter = '{:.' + str(digits) + 'g}'
         return formatter.format(round(val, digits) + 0)
+
+
+class ColorBox(Widget):
+    color = ObjectProperty(grapefruit.Color((1, 1, 1)))
+
+    def on_touch_down(self, touch):
+        if self.collide_point(*touch.pos):
+            self.lookup_screen.color = self.color
