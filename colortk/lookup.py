@@ -28,6 +28,7 @@ class LookupScreen(Screen):
         self.color = grapefruit.Color((0, 0, 0))
         self.set_color_info()
         super().__init__(**kwargs)
+        self.make_schemes()
         displays = [('Hex', [self.color.html]), ('sRGB', self.color.ints),
                     ('HSL', self.color.hsl), ('HSV', self.color.hsv),
                     ('YIQ', self.color.yiq), ('YUV', self.color.yuv),
@@ -62,12 +63,31 @@ class LookupScreen(Screen):
                 value_display.value = list(self.color.cmyk)
             value_display.update_inputs()
         self.set_color_info()
+        self.make_schemes()
 
     def set_color_info(self):
         self.color_name = self.named_colors.get(self.color.html, 'N/A')
         self.websafe_color = grapefruit.Color(self.color.websafe)
         self.greyscale_color = grapefruit.Color(self.color.greyscale)
         self.ryb_hue = round(grapefruit.rgb_to_ryb(self.color.hsl_hue), 3)
+
+    def make_schemes(self):
+        for color_box, color in zip(
+                self.ids.monochrome_grid.children,
+                self.color.make_monochrome_scheme()):
+            color_box.color = color
+        for color_box, color in zip(
+                self.ids.triadic_grid.children,
+                self.color.make_triadic_scheme()):
+            color_box.color = color
+        for color_box, color in zip(
+                self.ids.tetradic_grid.children,
+                self.color.make_tetradic_scheme()):
+            color_box.color = color
+        for color_box, color in zip(
+                self.ids.analogous_grid.children,
+                self.color.make_analogous_scheme()):
+            color_box.color = color
 
 
 class ValueDisplay(GridLayout):

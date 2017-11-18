@@ -54,6 +54,7 @@
                             text: 'Websafe: ' + getattr(root.websafe_color, 'html')
 
                         ColorBox:
+                            width: 100
                             lookup_screen: root
                             color: root.websafe_color
 
@@ -61,6 +62,7 @@
                             text: 'Greyscale: ' + getattr(root.greyscale_color, 'html')
 
                         ColorBox:
+                            width: 100
                             lookup_screen: root
                             color: root.greyscale_color
 
@@ -69,6 +71,72 @@
 
             TabbedPanelItem:
                 text: 'Schemes'
+
+                ScrollView:
+                    GridLayout:
+                        cols: 1
+                        size_hint: None, None
+                        width: self.minimum_width
+                        height: self.minimum_height
+                        spacing: 25
+                        padding: 25, 25
+
+                        InfoLabel:
+                            text: 'Monochrome Scheme:'
+
+                        SchemeGrid:
+                            id: monochrome_grid
+
+                            ColorBox:
+                                lookup_screen: root
+
+                            ColorBox:
+                                lookup_screen: root
+
+                            ColorBox:
+                                lookup_screen: root
+
+                            ColorBox:
+                                lookup_screen: root
+
+                        InfoLabel:
+                            text: 'Triadic Scheme:'
+
+                        SchemeGrid:
+                            id: triadic_grid
+
+                            ColorBox:
+                                lookup_screen: root
+
+                            ColorBox:
+                                lookup_screen: root
+
+                        InfoLabel:
+                            text: 'Tetradic Scheme:'
+
+                        SchemeGrid:
+                            id: tetradic_grid
+
+                            ColorBox:
+                                lookup_screen: root
+
+                            ColorBox:
+                                lookup_screen: root
+
+                            ColorBox:
+                                lookup_screen: root
+
+                        InfoLabel:
+                            text: 'Analogous Scheme:'
+
+                        SchemeGrid:
+                            id: analogous_grid
+
+                            ColorBox:
+                                lookup_screen: root
+
+                            ColorBox:
+                                lookup_screen: root
 
             TabbedPanelItem:
                 text: 'Tools'
@@ -117,7 +185,7 @@
 
 <ColorBox>:
     size_hint: None, None
-    size: 100, 50
+    size: 50, 50
 
     canvas:
         Color:
@@ -134,6 +202,13 @@
             width: 2
             joint: 'miter'
 
+
+<SchemeGrid@GridLayout>:
+    rows: 1
+    size_hint: None, None
+    width: self.minimum_width
+    height: self.minimum_height
+    spacing: 5
 
 
 <InfoLabel@Label>:
