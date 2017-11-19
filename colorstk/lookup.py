@@ -20,6 +20,7 @@ class LookupScreen(Screen):
     color_name = StringProperty()
     websafe_color = ObjectProperty()
     greyscale_color = ObjectProperty()
+    complementary_color = ObjectProperty()
     ryb_hue = NumericProperty()
     named_colors = {value: name for name, value in
                     grapefruit.NAMED_COLOR.items()}
@@ -69,6 +70,7 @@ class LookupScreen(Screen):
         self.color_name = self.named_colors.get(self.color.html, 'N/A')
         self.websafe_color = grapefruit.Color(self.color.websafe)
         self.greyscale_color = grapefruit.Color(self.color.greyscale)
+        self.complementary_color = self.color.complementary_color()
         self.ryb_hue = round(grapefruit.rgb_to_ryb(self.color.hsl_hue), 3)
 
     def make_schemes(self):
