@@ -1,5 +1,22 @@
 <LookupScreen>:
+    ActionBar:
+        id: action_bar
+        pos_hint: {'top': 1}
+
+        ActionView:
+            ActionPrevious:
+                title: 'Color Lookup'
+                with_previous: False
+            ActionButton:
+                text: 'Prev'
+                on_release: root.previous_color()
+            ActionButton:
+                text: 'Next'
+                on_release: root.next_color()
+
     BoxLayout:
+        size_hint_y: None
+        height: root.height - action_bar.height
         padding: 20
 
         canvas:

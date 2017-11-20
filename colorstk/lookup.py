@@ -1,12 +1,12 @@
-from collections import OrderedDict
+from collections import deque, OrderedDict
 
 import grapefruit
 from kivy.lang.builder import Builder
-from kivy.uix.gridlayout import GridLayout
 from kivy.properties import (ListProperty,
                              NumericProperty,
                              ObjectProperty,
                              StringProperty)
+from kivy.uix.gridlayout import GridLayout
 from kivy.uix.screenmanager import Screen
 from kivy.uix.textinput import TextInput
 from kivy.uix.widget import Widget
@@ -26,6 +26,8 @@ class LookupScreen(Screen):
                     grapefruit.NAMED_COLOR.items()}
 
     def __init__(self, **kwargs):
+        self.history = deque(maxlen=30)
+        self.history_next = deque(maxlen=30)
         self.color = grapefruit.Color((0, 0, 0))
         self.set_color_info()
         super().__init__(**kwargs)
@@ -91,6 +93,16 @@ class LookupScreen(Screen):
                 self.color.make_analogous_scheme()):
             color_box.color = color
 
+    def previous_color(self):
+        if len(self.history):
+            self.history_next.append(self.color)
+            self.color = self.history.pop()
+
+    def next_color(self):
+        if len(self.history_next):
+            self.history.append(self.color)
+            self.color = self.history_next.pop()
+
 
 class ValueDisplay(GridLayout):
     def __init__(self, lookup_screen, color_space, value, **kwargs):
@@ -114,6 +126,8 @@ class ValueDisplay(GridLayout):
                 self.value[value_input.index])
 
     def update_color(self):
+        self.lookup_screen.history.append(self.lookup_screen.color)
+        self.lookup_screen.history_next.clear()
         if self.color_space == 'Hex':
             self.lookup_screen.color = grapefruit.Color.from_html(*self.value)
         elif self.color_space == 'sRGB':
@@ -196,4 +210,6 @@ class ColorBox(Widget):
 
     def on_touch_down(self, touch):
         if self.collide_point(*touch.pos):
+            self.lookup_screen.history.append(self.lookup_screen.color)
+            self.lookup_screen.history_next.clear()
             self.lookup_screen.color = self.color
