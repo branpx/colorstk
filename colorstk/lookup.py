@@ -27,7 +27,7 @@ class LookupScreen(Screen):
 
     def __init__(self, **kwargs):
         self.history = deque(maxlen=30)
-        self.history_next = deque(maxlen=30)
+        self.history_next = []
         self.color = grapefruit.Color((0, 0, 0))
         self.set_color_info()
         super().__init__(**kwargs)
@@ -43,6 +43,8 @@ class LookupScreen(Screen):
                 ValueDisplay(self, color_space, value))
 
     def on_color(self, instance, color):
+        if not self.color.is_legal:
+            return
         for value_display in self.ids.value_grid.children:
             if value_display.color_space == 'Hex':
                 value_display.value = [self.color.html]
@@ -127,7 +129,6 @@ class ValueDisplay(GridLayout):
 
     def update_color(self):
         self.lookup_screen.history.append(self.lookup_screen.color)
-        self.lookup_screen.history_next.clear()
         if self.color_space == 'Hex':
             self.lookup_screen.color = grapefruit.Color.from_html(*self.value)
         elif self.color_space == 'sRGB':
@@ -149,6 +150,11 @@ class ValueDisplay(GridLayout):
             self.lookup_screen.color = grapefruit.Color.from_cmy(*self.value)
         elif self.color_space == 'CMYK':
             self.lookup_screen.color = grapefruit.Color.from_cmyk(*self.value)
+        if self.lookup_screen.color.is_legal:
+            self.lookup_screen.history_next.clear()
+        else:
+            self.lookup_screen.previous_color()
+            self.lookup_screen.history_next.pop()
 
 
 class ValueInput(TextInput):
