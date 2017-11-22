@@ -1,0 +1,45 @@
+<RootWidget>:
+    ActionBar:
+        id: action_bar
+        pos_hint: {'top': 1}
+        ActionView:
+            id: action_view
+            ActionPrevious:
+                id: action_previous
+                with_previous: False
+                on_release: screen_menu.toggled = True
+
+    ScreenManager:
+        id: screen_manager
+        size_hint_y: None
+        height: root.height - action_bar.height
+
+    ScreenMenu:
+        id: screen_menu
+        cols: 1
+        size_hint_x: None
+        width: 300
+        disabled: True
+        opacity: 0
+
+        canvas:
+            Color:
+                rgba: 0.2, 0.2, 0.2, 1
+            Rectangle:
+                pos: self.pos
+                size: self.size
+
+        ScreenMenuItem:
+            text: 'Lookup'
+            on_release: screen_manager.current = 'lookup'
+        ScreenMenuItem:
+            text: 'Palettes'
+            on_release: screen_manager.current = 'palettes'
+        ScreenMenuItem:
+            text: 'Settings'
+            on_release: screen_manager.current = 'settings'
+
+
+<ScreenMenuItem@Button>:
+    size_hint_y: None
+    height: 50
