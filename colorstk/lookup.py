@@ -1,11 +1,13 @@
 from collections import deque, OrderedDict
 
 import grapefruit
+from kivy.app import App
 from kivy.lang.builder import Builder
 from kivy.properties import (ListProperty,
                              NumericProperty,
                              ObjectProperty,
                              StringProperty)
+from kivy.uix.actionbar import ActionButton
 from kivy.uix.gridlayout import GridLayout
 from kivy.uix.screenmanager import Screen
 from kivy.uix.textinput import TextInput
@@ -41,6 +43,22 @@ class LookupScreen(Screen):
         for color_space, value in self.color_values.items():
             self.ids.value_grid.add_widget(
                 ValueDisplay(self, color_space, value))
+
+    def on_pre_enter(self):
+        root = App.get_running_app().root
+        root.ids.action_previous.title = 'Lookup'
+        self.prev_button = ActionButton(text='Prev')
+        self.next_button = ActionButton(text='Next')
+        self.prev_button.bind(on_release=self.previous_color)
+        self.next_button.bind(on_release=self.next_color)
+        root.ids.action_view.add_widget(self.prev_button)
+        root.ids.action_view.add_widget(self.next_button)
+
+    def on_pre_leave(self):
+        root = App.get_running_app().root
+        root.ids.action_previous.title = ''
+        root.ids.action_view.remove_widget(self.prev_button)
+        root.ids.action_view.remove_widget(self.next_button)
 
     def on_color(self, instance, color):
         if not self.color.is_legal:
@@ -95,12 +113,12 @@ class LookupScreen(Screen):
                 self.color.make_analogous_scheme()):
             color_box.color = color
 
-    def previous_color(self):
+    def previous_color(self, button=None):
         if len(self.history):
             self.history_next.append(self.color)
             self.color = self.history.pop()
 
-    def next_color(self):
+    def next_color(self, button=None):
         if len(self.history_next):
             self.history.append(self.color)
             self.color = self.history_next.pop()

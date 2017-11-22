@@ -1,5 +1,4 @@
 from kivy.app import App
-from kivy.lang.builder import Builder
 from kivy.properties import BooleanProperty
 from kivy.uix.floatlayout import FloatLayout
 from kivy.uix.gridlayout import GridLayout
@@ -10,9 +9,6 @@ import lookup
 import palettes
 import picker
 import settings
-
-
-Builder.load_file('main.kv')
 
 
 class RootWidget(FloatLayout):
@@ -39,13 +35,17 @@ class ScreenMenu(GridLayout):
 class ColorsTKApp(App):
     def build(self):
         root_widget = RootWidget()
-        root_widget.ids.screen_manager.add_widget(lookup.LookupScreen(name='lookup'))
-        root_widget.ids.screen_manager.add_widget(picker.PickerScreen(name='picker'))
-        root_widget.ids.screen_manager.add_widget(palettes.PalettesScreen(name='palettes'))
-        root_widget.ids.screen_manager.add_widget(canvas.CanvasScreen(name='canvas'))
-        root_widget.ids.screen_manager.add_widget(settings.SettingsScreen(name='settings'))
         return root_widget
+
+    def on_start(self):
+        self.root.ids.screen_manager.add_widget(lookup.LookupScreen(name='lookup'))
+        self.root.ids.screen_manager.add_widget(picker.PickerScreen(name='picker'))
+        self.root.ids.screen_manager.add_widget(palettes.PalettesScreen(name='palettes'))
+        self.root.ids.screen_manager.add_widget(canvas.CanvasScreen(name='canvas'))
+        self.root.ids.screen_manager.add_widget(settings.SettingsScreen(name='settings'))
 
 
 if __name__ == '__main__':
-    ColorsTKApp().run()
+    app = ColorsTKApp()
+    app.load_kv('main.kv')
+    app.run()
