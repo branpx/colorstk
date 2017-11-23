@@ -29,20 +29,20 @@ class ScreenMenu(GridLayout):
     def on_touch_down(self, touch):
         if not self.collide_point(*touch.pos):
             self.toggled = False
-        super().on_touch_down(touch)
+        super(ScreenMenu, self).on_touch_down(touch)
 
 
 class ColorsTKApp(App):
     def build(self):
-        root_widget = RootWidget()
-        return root_widget
+        return RootWidget()
 
     def on_start(self):
-        self.root.ids.screen_manager.add_widget(lookup.LookupScreen(name='lookup'))
-        self.root.ids.screen_manager.add_widget(picker.PickerScreen(name='picker'))
-        self.root.ids.screen_manager.add_widget(palettes.PalettesScreen(name='palettes'))
-        self.root.ids.screen_manager.add_widget(canvas.CanvasScreen(name='canvas'))
-        self.root.ids.screen_manager.add_widget(settings.SettingsScreen(name='settings'))
+        screen_manager = self.root.ids.screen_manager
+        screen_manager.add_widget(lookup.LookupScreen(name='lookup'))
+        screen_manager.add_widget(picker.PickerScreen(name='picker'))
+        screen_manager.add_widget(palettes.PalettesScreen(name='palettes'))
+        screen_manager.add_widget(canvas.CanvasScreen(name='canvas'))
+        screen_manager.add_widget(settings.SettingsScreen(name='settings'))
 
 
 if __name__ == '__main__':

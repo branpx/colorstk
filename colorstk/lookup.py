@@ -32,7 +32,7 @@ class LookupScreen(Screen):
         self.history_next = []
         self.color = grapefruit.Color((0, 0, 0))
         self.set_color_info()
-        super().__init__(**kwargs)
+        super(LookupScreen, self).__init__(**kwargs)
         self.make_schemes()
         displays = [('Hex', [self.color.html]), ('sRGB', self.color.ints),
                     ('HSL', self.color.hsl), ('HSV', self.color.hsv),
@@ -129,7 +129,7 @@ class ValueDisplay(GridLayout):
         self.color_space = color_space
         self.lookup_screen = lookup_screen
         self.value = list(value)
-        super().__init__(**kwargs)
+        super(ValueDisplay, self).__init__(**kwargs)
         self.value_inputs = []
         for index in range(len(self.value)):
             if self.color_space == 'Hex':
@@ -169,7 +169,7 @@ class ValueDisplay(GridLayout):
         elif self.color_space == 'CMYK':
             self.lookup_screen.color = grapefruit.Color.from_cmyk(*self.value)
         if self.lookup_screen.color.is_legal:
-            self.lookup_screen.history_next.clear()
+            del self.lookup_screen.history_next[:]
         else:
             self.lookup_screen.previous_color()
             self.lookup_screen.history_next.pop()
@@ -177,7 +177,7 @@ class ValueDisplay(GridLayout):
 
 class ValueInput(TextInput):
     def __init__(self, index, **kwargs):
-        super().__init__(**kwargs)
+        super(ValueInput, self).__init__(**kwargs)
         self.index = index
 
     def on_focus(self, instance, focused):
@@ -235,5 +235,5 @@ class ColorBox(Widget):
     def on_touch_down(self, touch):
         if self.collide_point(*touch.pos):
             self.lookup_screen.history.append(self.lookup_screen.color)
-            self.lookup_screen.history_next.clear()
+            del self.lookup_screen.history_next[:]
             self.lookup_screen.color = self.color
