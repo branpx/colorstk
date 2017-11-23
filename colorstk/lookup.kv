@@ -1,6 +1,6 @@
 <LookupScreen>:
     BoxLayout:
-        padding: 20
+        padding: '20dp'
 
         canvas:
             Color:
@@ -23,12 +23,12 @@
                 size_hint: None, None
                 width: self.minimum_width
                 height: self.minimum_height
-                spacing: 50
-                padding: 0, 25
+                spacing: '50dp'
+                padding: 0, '25dp'
 
         TabbedPanel:
             do_default_tab: False
-            tab_height: 30
+            tab_height: '30dp'
 
             TabbedPanelItem:
                 text: 'Info'
@@ -39,11 +39,11 @@
                         size_hint: None, None
                         width: self.minimum_width
                         height: self.minimum_height
-                        spacing: 25
-                        padding: 25, 25
+                        spacing: '25dp'
+                        padding: '25dp', '25dp'
 
                         ColorBox:
-                            size: 200, 100
+                            size: '200dp', '100dp'
                             lookup_screen: root
                             color: root.color
 
@@ -54,7 +54,7 @@
                             text: 'Websafe: ' + getattr(root.websafe_color, 'html')
 
                         ColorBox:
-                            width: 100
+                            width: '100dp'
                             lookup_screen: root
                             color: root.websafe_color
 
@@ -62,7 +62,7 @@
                             text: 'Greyscale: ' + getattr(root.greyscale_color, 'html')
 
                         ColorBox:
-                            width: 100
+                            width: '100dp'
                             lookup_screen: root
                             color: root.greyscale_color
 
@@ -70,7 +70,7 @@
                             text: 'Complementary: ' + getattr(root.complementary_color, 'html')
 
                         ColorBox:
-                            width: 100
+                            width: '100dp'
                             lookup_screen: root
                             color: root.complementary_color
 
@@ -86,8 +86,8 @@
                         size_hint: None, None
                         width: self.minimum_width
                         height: self.minimum_height
-                        spacing: 25
-                        padding: 25, 25
+                        spacing: '25dp'
+                        padding: '25dp', '25dp'
 
                         InfoLabel:
                             text: 'Monochrome Scheme:'
@@ -154,19 +154,20 @@
     rows: 1
     size_hint: None, None
     width: self.minimum_width
-    height: 30
+    height: '30dp'
 
     Label:
         text: self.parent.color_space
         size_hint_x: None
-        width: 75
+        width: '75dp'
+        font_size: '15dp'
 
 
 <ValueInput>:
     size_hint_x: None
-    width: 60
-    font_size: 18
-    padding: 5, 4
+    width: '60dp'
+    font_size: '18dp'
+    padding: '5dp', '4dp'
     cursor_color: 0, 0, 0, 1
     multiline: False
     write_tab: False
@@ -193,7 +194,7 @@
 
 <ColorBox>:
     size_hint: None, None
-    size: 50, 50
+    size: '50dp', '50dp'
 
     canvas.before:
         Color:
@@ -207,7 +208,7 @@
             rgba: 0.1, 0.1, 0.1, 1
         Line:
             rectangle: self.x, self.y, self.width, self.height
-            width: 2
+            width: dp(2)
             joint: 'miter'
 
 
@@ -220,6 +221,7 @@
 
 <InfoLabel@Label>:
     size_hint: None, None
-    text_size: None, 30
+    text_size: None, dp(30)
     size: self.texture_size
+    font_size: '15dp'
     valign: 'bottom'

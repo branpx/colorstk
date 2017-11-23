@@ -3,6 +3,7 @@ from collections import deque, OrderedDict
 import grapefruit
 from kivy.app import App
 from kivy.lang.builder import Builder
+from kivy.metrics import dp
 from kivy.properties import (ListProperty,
                              NumericProperty,
                              ObjectProperty,
@@ -133,7 +134,7 @@ class ValueDisplay(GridLayout):
         self.value_inputs = []
         for index in range(len(self.value)):
             if self.color_space == 'Hex':
-                value_input = ValueInput(0, width=90, input_filter=None)
+                value_input = ValueInput(0, width=dp(90), input_filter=None)
             else:
                 value_input = ValueInput(index)
             value_input.text = value_input.format_value(self.value[index])
