@@ -2,7 +2,7 @@ from kivy.app import App
 from kivy.properties import BooleanProperty
 from kivy.uix.floatlayout import FloatLayout
 from kivy.uix.gridlayout import GridLayout
-from kivy.uix.screenmanager import ScreenManager
+from kivy.uix.screenmanager import Screen, ScreenManager
 
 import canvas
 import lookup
@@ -20,9 +20,11 @@ class ScreenMenu(GridLayout):
 
     def on_toggled(self, instance, toggled):
         if self.toggled:
+            self.parent.ids.screen_manager.disabled = True
             self.disabled = False
             self.opacity = 1
         else:
+            self.parent.ids.screen_manager.disabled = False
             self.disabled = True
             self.opacity = 0
 
@@ -30,6 +32,10 @@ class ScreenMenu(GridLayout):
         if not self.collide_point(*touch.pos):
             self.toggled = False
         super(ScreenMenu, self).on_touch_down(touch)
+
+
+class AboutScreen(Screen):
+    pass
 
 
 class ColorsTKApp(App):
@@ -43,6 +49,7 @@ class ColorsTKApp(App):
         screen_manager.add_widget(palettes.PalettesScreen(name='palettes'))
         screen_manager.add_widget(canvas.CanvasScreen(name='canvas'))
         screen_manager.add_widget(settings.SettingsScreen(name='settings'))
+        screen_manager.add_widget(AboutScreen(name='about'))
 
 
 if __name__ == '__main__':
