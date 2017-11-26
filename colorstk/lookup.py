@@ -1,4 +1,5 @@
 from collections import deque, OrderedDict
+import re
 
 import grapefruit
 from kivy.app import App
@@ -134,9 +135,9 @@ class ValueDisplay(GridLayout):
         self.value_inputs = []
         for index in range(len(self.value)):
             if self.color_space == 'Hex':
-                value_input = ValueInput(0, width=dp(90), input_filter=None)
+                value_input = ValueInput(0, self.color_space, width=dp(90))
             else:
-                value_input = ValueInput(index)
+                value_input = ValueInput(index, self.color_space)
             value_input.text = value_input.format_value(self.value[index])
             self.add_widget(value_input)
             self.value_inputs.append(value_input)
@@ -177,9 +178,14 @@ class ValueDisplay(GridLayout):
 
 
 class ValueInput(TextInput):
-    def __init__(self, index, **kwargs):
+    hex_pat = re.compile(u'^#?[0-9A-Fa-f]*$')
+    float_pat = re.compile(u'^-?[0-9]*\\.?[0-9]*$')
+
+    def __init__(self, index, color_space, **kwargs):
         super(ValueInput, self).__init__(**kwargs)
         self.index = index
+        if color_space in ('sRGB', 'HSV', 'HSL', 'CMY', 'CMYK'):
+            self.input_filter = 'float'
 
     def on_focus(self, instance, focused):
         if (not focused and self.text and self.valid_input() and
@@ -191,6 +197,18 @@ class ValueInput(TextInput):
             self.parent.update_color()
         else:
             self.text = self.format_value(self.parent.value[self.index])
+
+    def insert_text(self, substring, from_undo=False):
+        cursor_col = self.cursor[0]
+        new_text = self.text[:cursor_col] + substring + self.text[cursor_col:]
+        if self.parent.color_space == 'Hex':
+            if not re.match(self.hex_pat, new_text):
+                return
+        elif self.parent.color_space in ('YIQ', 'YUV', 'CIE-XYZ', 'CIE-LAB'):
+            if not re.match(self.float_pat, new_text):
+                return
+        return super(ValueInput, self).insert_text(
+            substring, from_undo=from_undo)
 
     def valid_input(self):
         if self.parent.color_space == 'Hex':
