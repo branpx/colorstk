@@ -51,6 +51,10 @@ class LookupScreen(Screen):
         root.ids.action_previous.title = 'Lookup'
         self.prev_button = ActionButton(text='Prev')
         self.next_button = ActionButton(text='Next')
+        if not self.history:
+            self.prev_button.disabled = True
+        if not self.history_next:
+            self.next_button.disabled = True
         self.prev_button.bind(on_release=self.previous_color)
         self.next_button.bind(on_release=self.next_color)
         root.ids.action_view.add_widget(self.prev_button)
@@ -118,12 +122,18 @@ class LookupScreen(Screen):
     def previous_color(self, button=None):
         if len(self.history):
             self.history_next.append(self.color)
+            self.next_button.disabled = False
             self.color = self.history.pop()
+            if not self.history:
+                self.prev_button.disabled = True
 
     def next_color(self, button=None):
         if len(self.history_next):
             self.history.append(self.color)
+            self.prev_button.disabled = False
             self.color = self.history_next.pop()
+            if not self.history_next:
+                self.next_button.disabled = True
 
 
 class ValueDisplay(GridLayout):
@@ -150,6 +160,7 @@ class ValueDisplay(GridLayout):
 
     def update_color(self):
         self.lookup_screen.history.append(self.lookup_screen.color)
+        self.lookup_screen.prev_button.disabled = False
         if self.color_space == 'Hex':
             self.lookup_screen.color = grapefruit.Color.from_html(*self.value)
         elif self.color_space == 'sRGB':
@@ -173,6 +184,7 @@ class ValueDisplay(GridLayout):
             self.lookup_screen.color = grapefruit.Color.from_cmyk(*self.value)
         if self.lookup_screen.color.is_legal:
             del self.lookup_screen.history_next[:]
+            self.lookup_screen.next_button.disabled = True
         else:
             self.lookup_screen.previous_color()
             self.lookup_screen.history_next.pop()
@@ -269,5 +281,7 @@ class ColorBox(Widget):
     def on_touch_down(self, touch):
         if self.collide_point(*touch.pos):
             self.lookup_screen.history.append(self.lookup_screen.color)
+            self.lookup_screen.prev_button.disabled = False
             del self.lookup_screen.history_next[:]
+            self.lookup_screen.next_button.disabled = True
             self.lookup_screen.color = self.color
