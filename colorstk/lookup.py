@@ -146,6 +146,7 @@ class ValueDisplay(GridLayout):
         for value_input in self.value_inputs:
             value_input.text = value_input.format_value(
                 self.value[value_input.index])
+            value_input.scroll_x = 0
 
     def update_color(self):
         self.lookup_screen.history.append(self.lookup_screen.color)
@@ -188,15 +189,14 @@ class ValueInput(TextInput):
             self.input_filter = 'float'
 
     def on_focus(self, instance, focused):
-        if (not focused and self.text and self.valid_input() and
-                self.text != self.format_value(self.parent.value[self.index])):
-            if self.parent.color_space == 'Hex':
-                self.parent.value = [self.text]
+        if not focused:
+            if (self.text and self.text != self.format_value(
+                    self.parent.value[self.index]) and self.valid_input()):
+                self.parent.value[self.index] = self.constrain_value()
+                self.parent.update_color()
             else:
-                self.parent.value[self.index] = float(self.text)
-            self.parent.update_color()
-        else:
-            self.text = self.format_value(self.parent.value[self.index])
+                self.text = self.format_value(self.parent.value[self.index])
+                self.scroll_x = 0
 
     def insert_text(self, substring, from_undo=False):
         cursor_col = self.cursor[0]
@@ -223,22 +223,37 @@ class ValueInput(TextInput):
                     return False
             else:
                 return False
-        elif self.parent.color_space == 'sRGB':
-            if not 0 <= float(self.text) <= 255:
-                return False
+        return True
+
+    def constrain_value(self):
+        try:
+            value = float(self.text)
+        except ValueError:
+            return self.text
+        if self.parent.color_space == 'sRGB':
+            if value < 0:
+                return 0
+            elif value > 255:
+                return 255
         elif (self.parent.color_space == 'HSV' or
               self.parent.color_space == 'HSL'):
             if self.index == 0:
-                if not 0 <= float(self.text) <= 359:
-                    return False
+                if value < 0:
+                    return 0
+                elif value > 359:
+                    return 359
             else:
-                if not 0 <= float(self.text) <= 1:
-                    return False
+                if value < 0:
+                    return 0
+                elif value > 1:
+                    return 1
         elif (self.parent.color_space == 'CMY' or
               self.parent.color_space == 'CMYK'):
-            if not 0 <= float(self.text) <= 1:
-                return False
-        return True
+            if value < 0:
+                return 0
+            elif value > 1:
+                return 1
+        return value
 
     @staticmethod
     def format_value(val, digits=3):
