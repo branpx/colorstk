@@ -1,0 +1,20 @@
+<PalettesScreen>:
+    canvas:
+        Color:
+            rgba: 0, 0, 0, 1
+        Rectangle:
+            pos: self.pos
+            size: self.size
+
+
+<NewPalettePopup>:
+    title: 'Palette Name'
+    size_hint: None, None
+    width: '200dp'
+
+    TextInput:
+        size_hint_y: None
+        height: '30dp'
+        cursor_color: 0, 0, 0, 1
+        multiline: False
+        on_text_validate: root.dismiss()

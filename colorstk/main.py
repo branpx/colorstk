@@ -20,10 +20,12 @@ class ScreenMenu(GridLayout):
 
     def on_toggled(self, instance, toggled):
         if self.toggled:
+            self.parent.ids.action_previous.disabled = True
             self.parent.ids.screen_manager.disabled = True
             self.disabled = False
             self.opacity = 1
         else:
+            self.parent.ids.action_previous.disabled = False
             self.parent.ids.screen_manager.disabled = False
             self.disabled = True
             self.opacity = 0
