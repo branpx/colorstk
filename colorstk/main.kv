@@ -1,3 +1,7 @@
+#:import App kivy.app.App
+#:import Factory kivy.factory.Factory
+
+
 <RootWidget>:
     ActionBar:
         id: action_bar
@@ -7,40 +11,44 @@
             ActionPrevious:
                 id: action_previous
                 with_previous: False
-                on_release: screen_menu.toggled = True
+                on_release: Factory.ScreenMenu().open()
 
     ScreenManager:
         id: screen_manager
         size_hint_y: None
         height: root.height - action_bar.height
 
-    ScreenMenu:
-        id: screen_menu
-        cols: 1
-        size_hint_x: None
-        width: '300dp'
-        disabled: True
-        opacity: 0
 
-        canvas:
-            Color:
-                rgba: 0.2, 0.2, 0.2, 1
-            Rectangle:
-                pos: self.pos
-                size: self.size
+<ScreenMenu@ModalView>:
+    size_hint_x: None
+    width: '300dp'
+    pos_hint: {'x': 0, 'y': 0}
+    background: ''
+
+    screen_manager: App.get_running_app().root.ids.screen_manager
+
+    canvas:
+        Color:
+            rgba: 0.2, 0.2, 0.2, 1
+        Rectangle:
+            pos: self.pos
+            size: self.size
+
+    GridLayout:
+        cols: 1
 
         ScreenMenuItem:
             text: 'Lookup'
-            on_release: screen_manager.current = 'lookup'
+            on_release: root.screen_manager.current = 'lookup'; root.dismiss()
         ScreenMenuItem:
             text: 'Palettes'
-            on_release: screen_manager.current = 'palettes'
+            on_release: root.screen_manager.current = 'palettes'; root.dismiss()
         ScreenMenuItem:
             text: 'Settings'
-            on_release: screen_manager.current = 'settings'
+            on_release: root.screen_manager.current = 'settings'; root.dismiss()
         ScreenMenuItem:
             text: 'About'
-            on_release: screen_manager.current = 'about'
+            on_release: root.screen_manager.current = 'about'; root.dismiss()
 
 
 <ScreenMenuItem@Button>:

@@ -21,7 +21,6 @@ class PalettesScreen(Screen):
 
     def on_pre_leave(self):
         root = App.get_running_app().root
-        root.ids.screen_menu.toggled = False
         root.ids.action_view.remove_widget(self.new_button)
 
 

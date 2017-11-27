@@ -62,7 +62,6 @@ class LookupScreen(Screen):
 
     def on_pre_leave(self):
         root = App.get_running_app().root
-        root.ids.screen_menu.toggled = False
         root.ids.action_view.remove_widget(self.prev_button)
         root.ids.action_view.remove_widget(self.next_button)
 

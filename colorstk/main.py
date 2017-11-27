@@ -1,8 +1,6 @@
 from kivy.app import App
-from kivy.properties import BooleanProperty
 from kivy.uix.floatlayout import FloatLayout
-from kivy.uix.gridlayout import GridLayout
-from kivy.uix.screenmanager import Screen, ScreenManager
+from kivy.uix.screenmanager import Screen
 
 import canvas
 import lookup
@@ -13,27 +11,6 @@ import settings
 
 class RootWidget(FloatLayout):
     pass
-
-
-class ScreenMenu(GridLayout):
-    toggled = BooleanProperty(False)
-
-    def on_toggled(self, instance, toggled):
-        if self.toggled:
-            self.parent.ids.action_previous.disabled = True
-            self.parent.ids.screen_manager.disabled = True
-            self.disabled = False
-            self.opacity = 1
-        else:
-            self.parent.ids.action_previous.disabled = False
-            self.parent.ids.screen_manager.disabled = False
-            self.disabled = True
-            self.opacity = 0
-
-    def on_touch_down(self, touch):
-        if not self.collide_point(*touch.pos):
-            self.toggled = False
-        super(ScreenMenu, self).on_touch_down(touch)
 
 
 class AboutScreen(Screen):
