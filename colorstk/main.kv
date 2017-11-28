@@ -1,22 +1,8 @@
 #:import App kivy.app.App
-#:import Factory kivy.factory.Factory
 
 
-<RootWidget>:
-    ActionBar:
-        id: action_bar
-        pos_hint: {'top': 1}
-        ActionView:
-            id: action_view
-            ActionPrevious:
-                id: action_previous
-                with_previous: False
-                on_release: Factory.ScreenMenu().open()
-
-    ScreenManager:
-        id: screen_manager
-        size_hint_y: None
-        height: root.height - action_bar.height
+<ActionBar>:
+    pos_hint: {'top': 1}
 
 
 <ScreenMenu@ModalView>:
@@ -25,7 +11,7 @@
     pos_hint: {'x': 0, 'y': 0}
     background: ''
 
-    screen_manager: App.get_running_app().root.ids.screen_manager
+    screen_manager: App.get_running_app().root
 
     canvas:
         Color:

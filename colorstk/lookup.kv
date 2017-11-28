@@ -1,4 +1,26 @@
+#:import Factory kivy.factory.Factory
+
+
 <LookupScreen>:
+    orientation: 'vertical'
+
+    ActionBar:
+        ActionView:
+            ActionPrevious:
+                title: 'Lookup'
+                with_previous: False
+                on_release: Factory.ScreenMenu().open()
+            ActionButton:
+                id: prev_button
+                text: 'Prev'
+                disabled: True
+                on_release: root.previous_color()
+            ActionButton:
+                id: next_button
+                text: 'Next'
+                disabled: True
+                on_release: root.next_color()
+
     BoxLayout:
         padding: '20dp'
 
