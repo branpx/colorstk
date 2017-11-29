@@ -2,10 +2,12 @@ from collections import deque, OrderedDict
 import re
 
 import grapefruit
+from kivy.app import App
 from kivy.lang.builder import Builder
 from kivy.properties import (NumericProperty,
                              ObjectProperty,
                              StringProperty)
+from kivy.uix.behaviors.knspace import knspace, KNSpaceBehavior
 from kivy.uix.boxlayout import BoxLayout
 from kivy.uix.gridlayout import GridLayout
 from kivy.uix.screenmanager import Screen
@@ -16,7 +18,7 @@ from kivy.uix.widget import Widget
 Builder.load_file('lookup.kv')
 
 
-class LookupScreen(BoxLayout, Screen):
+class LookupScreen(KNSpaceBehavior, BoxLayout, Screen):
     color = ObjectProperty()
     color_name = StringProperty()
     websafe_color = ObjectProperty()
@@ -96,7 +98,11 @@ class LookupScreen(BoxLayout, Screen):
                 self.color.make_analogous_scheme()):
             color_box.color = color
 
-    def previous_color(self, button=None):
+    def add_to_palette(self):
+        knspace.palettes_screen.mode = 'add'
+        App.get_running_app().root.current = 'palettes'
+
+    def previous_color(self):
         if len(self.history):
             self.history_next.append(self.color)
             self.ids.next_button.disabled = False
@@ -104,7 +110,7 @@ class LookupScreen(BoxLayout, Screen):
             if not self.history:
                 self.ids.prev_button.disabled = True
 
-    def next_color(self, button=None):
+    def next_color(self):
         if len(self.history_next):
             self.history.append(self.color)
             self.ids.prev_button.disabled = False

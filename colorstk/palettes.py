@@ -1,25 +1,45 @@
 from kivy.app import App
+from kivy.factory import Factory
 from kivy.lang.builder import Builder
-from kivy.properties import ListProperty, StringProperty
+from kivy.properties import (ListProperty,
+                             ObjectProperty,
+                             StringProperty)
+from kivy.uix.behaviors.knspace import knspace, KNSpaceBehavior
 from kivy.uix.boxlayout import BoxLayout
 from kivy.uix.gridlayout import GridLayout
 from kivy.uix.popup import Popup
 from kivy.uix.screenmanager import Screen
+from kivy.uix.widget import Widget
 
 
 Builder.load_file('palettes.kv')
 
 
-class PalettesScreen(BoxLayout, Screen):
+class PalettesScreen(KNSpaceBehavior, BoxLayout, Screen):
     palettes = ListProperty()
     mode = StringProperty('normal')
 
     def on_palettes(self, instance, palettes):
         self.ids.palette_stack.add_widget(palettes[-1])
 
+    def on_mode(self, instance, mode):
+        action_previous = self.ids.action_previous
+        screen_manager = App.get_running_app().root
+        if mode == 'normal':
+            action_previous.title = 'Palettes'
+            action_previous.with_previous = False
+        elif mode == 'add':
+            action_previous.title = 'Select palette'
+            action_previous.with_previous = True
 
-class ColorsScreen(Screen):
-    pass
+
+class ColorsScreen(KNSpaceBehavior, BoxLayout, Screen):
+    def load_colors(self, palette):
+        for color in palette.colors:
+            self.ids.color_stack.add_widget(PaletteColor(color=color))
+
+    def on_leave(self):
+        self.ids.color_stack.clear_widgets()
 
 
 class Palette(GridLayout):
@@ -28,8 +48,17 @@ class Palette(GridLayout):
 
     def on_touch_down(self, touch):
         if self.collide_point(*touch.pos):
-            screen_manager = App.get_running_app().root
-            screen_manager.current = 'colors'
+            if knspace.palettes_screen.mode == 'normal':
+                screen_manager = App.get_running_app().root
+                knspace.colors_screen.load_colors(self)
+                screen_manager.current = 'colors'
+            elif knspace.palettes_screen.mode == 'add':
+                self.colors.append(knspace.lookup_screen.color)
+                knspace.palettes_screen.mode = 'normal'
+
+
+class PaletteColor(Widget):
+    color = ObjectProperty()
 
 
 class NewPalettePopup(Popup):

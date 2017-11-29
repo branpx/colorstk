@@ -2,6 +2,7 @@
 
 
 <LookupScreen>:
+    knsname: 'lookup_screen'
     orientation: 'vertical'
 
     ActionBar:
@@ -10,6 +11,10 @@
                 title: 'Lookup'
                 with_previous: False
                 on_release: Factory.ScreenMenu().open()
+            ActionButton:
+                text: 'Add to palette'
+                on_release: root.add_to_palette()
+            ActionSeparator:
             ActionButton:
                 id: prev_button
                 text: 'Prev'

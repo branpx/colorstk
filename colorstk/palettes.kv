@@ -3,6 +3,7 @@
 
 
 <PalettesScreen>:
+    knsname: 'palettes_screen'
     orientation: 'vertical'
 
     canvas:
@@ -15,6 +16,7 @@
     ActionBar:
         ActionView:
             ActionPrevious:
+                id: action_previous
                 title: 'Palettes'
                 with_previous: False
                 on_release: Factory.ScreenMenu().open()
@@ -34,6 +36,7 @@
 
 
 <ColorsScreen>:
+    knsname: 'colors_screen'
     orientation: 'vertical'
 
     ActionBar:
@@ -42,6 +45,14 @@
                 title: 'Colors'
                 on_release: App.get_running_app().root.current = 'palettes'
 
+    ScrollView:
+        StackLayout:
+            id: color_stack
+            size_hint_min_x: '130dp'
+            size_hint_y: None
+            height: self.minimum_height
+            padding: '15dp', '15dp'
+            spacing: '15dp'
 
 <Palette>:
     cols: 1
@@ -65,6 +76,25 @@
         color: 0.7, 0.7, 0.7, 1
         text: str(len(root.colors)) + ' colors'
 
+
+<PaletteColor>:
+    size_hint: None, None
+    size: '100dp', '100dp'
+
+    canvas.before:
+        Color:
+            rgba: self.color
+        Rectangle:
+            pos: self.pos
+            size: self.size
+
+    canvas:
+        Color:
+            rgba: 0.3, 0.3, 0.3, 1
+        Line:
+            rectangle: self.x, self.y, self.width, self.height
+            width: dp(2)
+            joint: 'miter'
 
 
 <NewPalettePopup>:
