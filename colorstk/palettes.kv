@@ -17,9 +17,12 @@
         ActionView:
             ActionPrevious:
                 id: action_previous
-                title: 'Palettes'
-                with_previous: False
-                on_release: Factory.ScreenMenu().open()
+                on_release:
+                    if root.mode == 'normal': \
+                    Factory.ScreenMenu().open()
+                    elif root.mode == 'add': \
+                    App.get_running_app().root.current = 'lookup'
+                    root.mode = 'normal'
             ActionButton:
                 text: 'New'
                 on_release: Factory.NewPalettePopup(root).open()

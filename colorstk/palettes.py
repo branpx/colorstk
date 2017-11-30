@@ -17,14 +17,17 @@ Builder.load_file('palettes.kv')
 
 class PalettesScreen(KNSpaceBehavior, BoxLayout, Screen):
     palettes = ListProperty()
-    mode = StringProperty('normal')
+    mode = StringProperty()
+
+    def __init__(self, **kwargs):
+        super(PalettesScreen, self).__init__(**kwargs)
+        self.mode = 'normal'
 
     def on_palettes(self, instance, palettes):
         self.ids.palette_stack.add_widget(palettes[-1])
 
     def on_mode(self, instance, mode):
         action_previous = self.ids.action_previous
-        screen_manager = App.get_running_app().root
         if mode == 'normal':
             action_previous.title = 'Palettes'
             action_previous.with_previous = False
