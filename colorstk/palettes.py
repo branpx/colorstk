@@ -8,6 +8,7 @@ from kivy.storage.jsonstore import JsonStore
 from kivy.uix.behaviors.knspace import knspace, KNSpaceBehavior
 from kivy.uix.boxlayout import BoxLayout
 from kivy.uix.gridlayout import GridLayout
+from kivy.uix.label import Label
 from kivy.uix.popup import Popup
 from kivy.uix.screenmanager import Screen
 from kivy.uix.widget import Widget
@@ -25,7 +26,7 @@ class PalettesScreen(KNSpaceBehavior, BoxLayout, Screen):
         self.mode = 'normal'
         self.palette_store = JsonStore('palettes.json')
         for palette in self.palette_store:
-            self.ids.palette_stack.add_widget(Palette(
+            self.palettes.append(Palette(
                 name=palette, colors=self.palette_store[palette]['colors']))
 
     def on_palettes(self, instance, palettes):
@@ -53,11 +54,6 @@ class ColorsScreen(KNSpaceBehavior, BoxLayout, Screen):
 class Palette(GridLayout):
     name = StringProperty()
     colors = ListProperty()
-
-    def __init__(self, **kwargs):
-        super(Palette, self).__init__(**kwargs)
-        if self.name not in knspace.palettes_screen.palette_store:
-            knspace.palettes_screen.palette_store.put(self.name, colors=[])
 
     def on_touch_down(self, touch):
         if self.collide_point(*touch.pos):
@@ -90,5 +86,11 @@ class NewPalettePopup(Popup):
         self.ids.name_input.focus = True
 
     def add_palette(self, name_input):
-        self.palettes_screen.palettes.append(Palette(name=name_input.text))
-        self.dismiss()
+        if name_input.text not in knspace.palettes_screen.palette_store:
+            self.palettes_screen.palettes.append(Palette(name=name_input.text))
+            knspace.palettes_screen.palette_store.put(
+                name_input.text, colors=[])
+            self.dismiss()
+        else:
+            self.title = 'Palette already exists!'
+            self.title_color = [1, 0, 0, 1]
