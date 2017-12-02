@@ -4,6 +4,7 @@ from kivy.lang.builder import Builder
 from kivy.properties import (ListProperty,
                              ObjectProperty,
                              StringProperty)
+from kivy.storage.jsonstore import JsonStore
 from kivy.uix.behaviors.knspace import knspace, KNSpaceBehavior
 from kivy.uix.boxlayout import BoxLayout
 from kivy.uix.gridlayout import GridLayout
@@ -22,6 +23,10 @@ class PalettesScreen(KNSpaceBehavior, BoxLayout, Screen):
     def __init__(self, **kwargs):
         super(PalettesScreen, self).__init__(**kwargs)
         self.mode = 'normal'
+        self.palette_store = JsonStore('palettes.json')
+        for palette in self.palette_store:
+            self.ids.palette_stack.add_widget(Palette(
+                name=palette, colors=self.palette_store[palette]['colors']))
 
     def on_palettes(self, instance, palettes):
         self.ids.palette_stack.add_widget(palettes[-1])
@@ -49,6 +54,11 @@ class Palette(GridLayout):
     name = StringProperty()
     colors = ListProperty()
 
+    def __init__(self, **kwargs):
+        super(Palette, self).__init__(**kwargs)
+        if self.name not in knspace.palettes_screen.palette_store:
+            knspace.palettes_screen.palette_store.put(self.name, colors=[])
+
     def on_touch_down(self, touch):
         if self.collide_point(*touch.pos):
             if knspace.palettes_screen.mode == 'normal':
@@ -56,8 +66,12 @@ class Palette(GridLayout):
                 knspace.colors_screen.load_colors(self)
                 screen_manager.current = 'colors'
             elif knspace.palettes_screen.mode == 'add':
-                self.colors.append(knspace.lookup_screen.color)
+                self.colors.append(list(knspace.lookup_screen.color))
                 knspace.palettes_screen.mode = 'normal'
+
+    def on_colors(self, instance, colors):
+        knspace.palettes_screen.palette_store.put(
+            self.name, colors=self.colors)
 
 
 class PaletteColor(Widget):
