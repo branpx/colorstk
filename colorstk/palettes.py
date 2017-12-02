@@ -18,19 +18,15 @@ Builder.load_file('palettes.kv')
 
 
 class PalettesScreen(KNSpaceBehavior, BoxLayout, Screen):
-    palettes = ListProperty()
     mode = StringProperty()
 
     def __init__(self, **kwargs):
         super(PalettesScreen, self).__init__(**kwargs)
         self.mode = 'normal'
-        self.palette_store = JsonStore('palettes.json')
-        for palette in self.palette_store:
-            self.palettes.append(Palette(
-                name=palette, colors=self.palette_store[palette]['colors']))
-
-    def on_palettes(self, instance, palettes):
-        self.ids.palette_stack.add_widget(palettes[-1])
+        self.palettes = JsonStore('palettes.json')
+        for palette in self.palettes:
+            self.ids.palette_stack.add_widget(Palette(
+                name=palette, colors=self.palettes[palette]['colors']))
 
     def on_mode(self, instance, mode):
         action_previous = self.ids.action_previous
@@ -66,8 +62,7 @@ class Palette(GridLayout):
                 knspace.palettes_screen.mode = 'normal'
 
     def on_colors(self, instance, colors):
-        knspace.palettes_screen.palette_store.put(
-            self.name, colors=self.colors)
+        knspace.palettes_screen.palettes.put(self.name, colors=self.colors)
 
 
 class PaletteColor(Widget):
@@ -75,21 +70,17 @@ class PaletteColor(Widget):
 
 
 class NewPalettePopup(Popup):
-    def __init__(self, palettes_screen, **kwargs):
-        super(NewPalettePopup, self).__init__(**kwargs)
-        self.palettes_screen = palettes_screen
-        self.ids.name_input.bind(on_text_validate=self.add_palette)
-
     def on_open(self):
-        default_name = 'palette' + str(len(self.palettes_screen.palettes)+1)
+        default_name = 'palette' + str(len(knspace.palettes_screen.palettes)+1)
         self.ids.name_input.text = default_name
         self.ids.name_input.focus = True
 
     def add_palette(self, name_input):
-        if name_input.text not in knspace.palettes_screen.palette_store:
-            self.palettes_screen.palettes.append(Palette(name=name_input.text))
-            knspace.palettes_screen.palette_store.put(
+        if name_input.text not in knspace.palettes_screen.palettes:
+            knspace.palettes_screen.palettes.put(
                 name_input.text, colors=[])
+            knspace.palettes_screen.ids.palette_stack.add_widget(
+                Palette(name=name_input.text))
             self.dismiss()
         else:
             self.title = 'Palette already exists!'

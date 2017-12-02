@@ -1,6 +1,7 @@
 bin
 .buildozer
 buildozer.spec
+*.json
 *.pyc
 *.pyo
 *.swp

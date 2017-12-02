@@ -25,7 +25,7 @@
                     root.mode = 'normal'
             ActionButton:
                 text: 'New'
-                on_release: Factory.NewPalettePopup(root).open()
+                on_release: Factory.NewPalettePopup().open()
 
     ScrollView:
         StackLayout:
@@ -112,3 +112,4 @@
         cursor_color: 0, 0, 0, 1
         multiline: False
         write_tab: False
+        on_text_validate: root.add_palette(self)
