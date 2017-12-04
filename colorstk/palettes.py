@@ -6,6 +6,7 @@ from kivy.properties import (ListProperty,
                              ObjectProperty,
                              StringProperty)
 from kivy.storage.jsonstore import JsonStore
+from kivy.uix.actionbar import ActionButton
 from kivy.uix.behaviors.compoundselection import CompoundSelectionBehavior
 from kivy.uix.behaviors.knspace import knspace, KNSpaceBehavior
 from kivy.uix.boxlayout import BoxLayout
@@ -26,6 +27,8 @@ class PalettesScreen(KNSpaceBehavior, BoxLayout, Screen):
     def __init__(self, **kwargs):
         super(PalettesScreen, self).__init__(**kwargs)
         self.mode = 'normal'
+        self.delete_button = ActionButton(
+            text='Delete', on_release=self.delete_palette)
         self.palettes = JsonStore('palettes.json')
         for palette in self.palettes:
             self.ids.palette_stack.add_widget(Palette(
@@ -33,6 +36,7 @@ class PalettesScreen(KNSpaceBehavior, BoxLayout, Screen):
 
     def on_mode(self, instance, mode):
         action_previous = self.ids.action_previous
+        action_view = self.ids.action_view
         if mode == 'normal':
             action_previous.title = 'Palettes'
             action_previous.with_previous = False
@@ -42,6 +46,15 @@ class PalettesScreen(KNSpaceBehavior, BoxLayout, Screen):
         elif mode == 'selection':
             action_previous.title = 'Selection'
             action_previous.with_previous = True
+            action_view.add_widget(self.delete_button)
+
+    def delete_palette(self, button=None):
+        for palette in self.ids.palette_stack.selected_nodes:
+            self.ids.palette_stack.remove_widget(palette)
+            self.palettes.delete(palette.name)
+        self.ids.palette_stack.clear_selection()
+        self.ids.action_view.remove_widget(self.delete_button)
+        self.mode = 'normal'
 
 
 class ColorsScreen(KNSpaceBehavior, BoxLayout, Screen):

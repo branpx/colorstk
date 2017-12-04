@@ -15,6 +15,7 @@
 
     ActionBar:
         ActionView:
+            id: action_view
             ActionPrevious:
                 id: action_previous
                 on_release:
@@ -25,6 +26,7 @@
                     root.mode = 'normal'
                     elif root.mode == 'selection': \
                     palette_stack.clear_selection(); \
+                    action_view.remove_widget(root.delete_button); \
                     root.mode = 'normal'
             ActionButton:
                 text: 'New'
