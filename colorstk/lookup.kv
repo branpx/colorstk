@@ -176,6 +176,44 @@
             TabbedPanelItem:
                 text: 'Tools'
 
+                ScrollView:
+                    GridLayout:
+                        cols: 1
+                        size_hint: None, None
+                        width: self.minimum_width
+                        height: self.minimum_height
+                        spacing: '25dp'
+                        padding: '25dp', '25dp'
+
+                        GridLayout:
+                            rows: 1
+                            size_hint: None, None
+                            width: self.minimum_width
+                            height: self.minimum_height
+                            spacing: '25dp'
+
+                            ColorSelectBox:
+                                id: color_select1
+                                width: '75dp'
+                                lookup_screen: root
+
+                            ColorSelectBox:
+                                id: color_select2
+                                width: '75dp'
+                                lookup_screen: root
+
+                        Button:
+                            size_hint: None, None
+                            size: '200dp', '50dp'
+                            text: 'Blend colors'
+                            on_release: root.blend_colors()
+
+                        Button:
+                            size_hint: None, None
+                            size: '200dp', '50dp'
+                            text: 'Random color'
+                            on_release: root.random_color()
+
 
 <ValueDisplay>:
     rows: 1

@@ -1,4 +1,5 @@
 from collections import deque, OrderedDict
+import random
 import re
 
 import grapefruit
@@ -97,6 +98,22 @@ class LookupScreen(KNSpaceBehavior, BoxLayout, Screen):
                 self.ids.analogous_grid.children,
                 self.color.make_analogous_scheme()):
             color_box.color = color
+
+    def random_color(self):
+        self.history.append(self.color)
+        self.ids.prev_button.disabled = False
+        del self.history_next[:]
+        self.ids.next_button.disabled = True
+        self.color = grapefruit.Color(tuple(random.random() for _ in range(3)))
+
+    def blend_colors(self):
+        blend_color1 = self.ids.color_select1.color
+        blend_color2 = self.ids.color_select2.color
+        self.history.append(self.color)
+        self.ids.prev_button.disabled = False
+        del self.history_next[:]
+        self.ids.next_button.disabled = True
+        self.color = blend_color1.blend(blend_color2)
 
     def add_to_palette(self):
         knspace.palettes_screen.mode = 'add'
@@ -268,3 +285,13 @@ class ColorBox(Widget):
             del self.lookup_screen.history_next[:]
             self.lookup_screen.ids.next_button.disabled = True
             self.lookup_screen.color = self.color
+
+
+class ColorSelectBox(ColorBox):
+    def __init__(self, **kwargs):
+        super(ColorSelectBox, self).__init__(**kwargs)
+        self.color.alpha = 0
+
+    def on_touch_down(self, touch):
+        if self.collide_point(*touch.pos):
+            self.color = self.lookup_screen.color
