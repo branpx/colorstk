@@ -21,21 +21,25 @@
                     if root.mode == 'normal': \
                     Factory.ScreenMenu().open()
                     elif root.mode == 'add': \
-                    App.get_running_app().root.current = 'lookup'
+                    App.get_running_app().root.current = 'lookup'; \
+                    root.mode = 'normal'
+                    elif root.mode == 'selection': \
+                    palette_stack.clear_selection(); \
                     root.mode = 'normal'
             ActionButton:
                 text: 'New'
                 on_release: Factory.NewPalettePopup().open()
 
     ScrollView:
-        StackLayout:
+        SelectableStack:
             id: palette_stack
             size_hint_min_x: '200dp'
             size_hint_y: None
             height: self.minimum_height
             padding: '25dp', '25dp'
             spacing: '25dp'
-            palettes_screen: root
+            multiselect: True
+            touch_multiselect: True
 
 
 <ColorsScreen>:
@@ -62,10 +66,11 @@
     size_hint: None, None
     size: '150dp', '175dp'
     title_size: '15dp'
+    background_color: 0.2, 0.2, 0.2, 1
 
     canvas:
         Color:
-            rgba: 0.2, 0.2, 0.2, 1
+            rgba: self.background_color
         Rectangle:
             pos: self.pos
             size: self.size
