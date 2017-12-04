@@ -50,18 +50,27 @@
 
     ActionBar:
         ActionView:
+            id: action_view
             ActionPrevious:
-                title: 'Colors'
-                on_release: App.get_running_app().root.current = 'palettes'
+                id: action_previous
+                on_release:
+                    if root.mode == 'normal': \
+                    App.get_running_app().root.current = 'palettes'
+                    elif root.mode == 'selection': \
+                    color_stack.clear_selection(); \
+                    action_view.remove_widget(root.delete_button); \
+                    root.mode = 'normal'
 
     ScrollView:
-        StackLayout:
+        SelectableStack:
             id: color_stack
             size_hint_min_x: '130dp'
             size_hint_y: None
             height: self.minimum_height
             padding: '15dp', '15dp'
             spacing: '15dp'
+            multiselect: True
+            touch_multiselect: True
 
 <Palette>:
     cols: 1
@@ -90,6 +99,7 @@
 <PaletteColor>:
     size_hint: None, None
     size: '100dp', '100dp'
+    border_color: 0.3, 0.3, 0.3, 1
 
     canvas.before:
         Color:
@@ -100,7 +110,7 @@
 
     canvas:
         Color:
-            rgba: 0.3, 0.3, 0.3, 1
+            rgba: self.border_color
         Line:
             rectangle: self.x, self.y, self.width, self.height
             width: dp(2)
