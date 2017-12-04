@@ -44,7 +44,7 @@ class LookupScreen(KNSpaceBehavior, BoxLayout, Screen):
         self.color_values = OrderedDict(displays)
         for color_space, value in self.color_values.items():
             self.ids.value_grid.add_widget(
-                ValueDisplay(self, color_space, value))
+                ValueDisplay(color_space, value))
 
     def on_color(self, instance, color):
         if not self.color.is_legal:
@@ -109,11 +109,12 @@ class LookupScreen(KNSpaceBehavior, BoxLayout, Screen):
     def blend_colors(self):
         blend_color1 = self.ids.color_select1.color
         blend_color2 = self.ids.color_select2.color
-        self.history.append(self.color)
-        self.ids.prev_button.disabled = False
-        del self.history_next[:]
-        self.ids.next_button.disabled = True
-        self.color = blend_color1.blend(blend_color2)
+        if blend_color1.alpha and blend_color2.alpha:
+            self.history.append(self.color)
+            self.ids.prev_button.disabled = False
+            del self.history_next[:]
+            self.ids.next_button.disabled = True
+            self.color = blend_color1.blend(blend_color2)
 
     def add_to_palette(self):
         knspace.palettes_screen.mode = 'add'
@@ -137,9 +138,8 @@ class LookupScreen(KNSpaceBehavior, BoxLayout, Screen):
 
 
 class ValueDisplay(GridLayout):
-    def __init__(self, lookup_screen, color_space, value, **kwargs):
+    def __init__(self, color_space, value, **kwargs):
         self.color_space = color_space
-        self.lookup_screen = lookup_screen
         self.value = list(value)
         super(ValueDisplay, self).__init__(**kwargs)
         self.value_inputs = []
@@ -159,35 +159,36 @@ class ValueDisplay(GridLayout):
             value_input.scroll_x = 0
 
     def update_color(self):
-        self.lookup_screen.history.append(self.lookup_screen.color)
-        self.lookup_screen.ids.prev_button.disabled = False
+        lookup_screen = knspace.lookup_screen
+        lookup_screen.history.append(lookup_screen.color)
+        lookup_screen.ids.prev_button.disabled = False
         if self.color_space == 'Hex':
-            self.lookup_screen.color = grapefruit.Color.from_html(*self.value)
+            lookup_screen.color = grapefruit.Color.from_html(*self.value)
         elif self.color_space == 'sRGB':
             self.value = [val / 255 for val in self.value]
-            self.lookup_screen.color = grapefruit.Color.from_rgb(*self.value)
+            lookup_screen.color = grapefruit.Color.from_rgb(*self.value)
         elif self.color_space == 'HSL':
-            self.lookup_screen.color = grapefruit.Color.from_hsl(*self.value)
+            lookup_screen.color = grapefruit.Color.from_hsl(*self.value)
         elif self.color_space == 'HSV':
-            self.lookup_screen.color = grapefruit.Color.from_hsv(*self.value)
+            lookup_screen.color = grapefruit.Color.from_hsv(*self.value)
         elif self.color_space == 'YIQ':
-            self.lookup_screen.color = grapefruit.Color.from_yiq(*self.value)
+            lookup_screen.color = grapefruit.Color.from_yiq(*self.value)
         elif self.color_space == 'YUV':
-            self.lookup_screen.color = grapefruit.Color.from_yuv(*self.value)
+            lookup_screen.color = grapefruit.Color.from_yuv(*self.value)
         elif self.color_space == 'CIE-XYZ':
-            self.lookup_screen.color = grapefruit.Color.from_xyz(*self.value)
+            lookup_screen.color = grapefruit.Color.from_xyz(*self.value)
         elif self.color_space == 'CIE-LAB':
-            self.lookup_screen.color = grapefruit.Color.from_lab(*self.value)
+            lookup_screen.color = grapefruit.Color.from_lab(*self.value)
         elif self.color_space == 'CMY':
-            self.lookup_screen.color = grapefruit.Color.from_cmy(*self.value)
+            lookup_screen.color = grapefruit.Color.from_cmy(*self.value)
         elif self.color_space == 'CMYK':
-            self.lookup_screen.color = grapefruit.Color.from_cmyk(*self.value)
-        if self.lookup_screen.color.is_legal:
-            del self.lookup_screen.history_next[:]
-            self.lookup_screen.ids.next_button.disabled = True
+            lookup_screen.color = grapefruit.Color.from_cmyk(*self.value)
+        if lookup_screen.color.is_legal:
+            del lookup_screen.history_next[:]
+            lookup_screen.ids.next_button.disabled = True
         else:
-            self.lookup_screen.previous_color()
-            self.lookup_screen.history_next.pop()
+            lookup_screen.previous_color()
+            lookup_screen.history_next.pop()
 
 
 class ValueInput(TextInput):
@@ -280,11 +281,12 @@ class ColorBox(Widget):
 
     def on_touch_down(self, touch):
         if self.collide_point(*touch.pos):
-            self.lookup_screen.history.append(self.lookup_screen.color)
-            self.lookup_screen.ids.prev_button.disabled = False
-            del self.lookup_screen.history_next[:]
-            self.lookup_screen.ids.next_button.disabled = True
-            self.lookup_screen.color = self.color
+            lookup_screen = knspace.lookup_screen
+            lookup_screen.history.append(lookup_screen.color)
+            lookup_screen.ids.prev_button.disabled = False
+            del lookup_screen.history_next[:]
+            lookup_screen.ids.next_button.disabled = True
+            lookup_screen.color = self.color
 
 
 class ColorSelectBox(ColorBox):
@@ -294,4 +296,4 @@ class ColorSelectBox(ColorBox):
 
     def on_touch_down(self, touch):
         if self.collide_point(*touch.pos):
-            self.color = self.lookup_screen.color
+            self.color = knspace.lookup_screen.color
