@@ -112,15 +112,20 @@ class Palette(GridLayout):
 
     def on_touch_down(self, touch):
         if self.collide_point(*touch.pos):
+            touch.grab(self)
             if knspace.palettes_screen.mode == 'normal':
                 clock_event = Clock.schedule_once(self.trigger_selection, 1)
                 touch.ud['trigger_selection'] = clock_event
             elif knspace.palettes_screen.mode == 'selection':
                 self.parent.select_with_touch(self, touch)
 
+    def on_touch_move(self, touch):
+        if touch.grab_current is self and not self.collide_point(*touch.pos):
+            Clock.unschedule(touch.ud.get('trigger_selection'))
+
     def on_touch_up(self, touch):
         Clock.unschedule(touch.ud.get('trigger_selection'))
-        if self.collide_point(*touch.pos):
+        if touch.grab_current is self and self.collide_point(*touch.pos):
             if knspace.palettes_screen.mode == 'normal':
                 screen_manager = App.get_running_app().root
                 knspace.colors_screen.load_colors(self)
@@ -128,6 +133,7 @@ class Palette(GridLayout):
             elif knspace.palettes_screen.mode == 'add':
                 self.colors.append(list(knspace.lookup_screen.color))
                 knspace.palettes_screen.mode = 'normal'
+        touch.ungrab(self)
 
     def on_colors(self, instance, colors):
         knspace.palettes_screen.palettes.put(self.name, colors=self.colors)
@@ -149,14 +155,20 @@ class PaletteColor(Widget):
 
     def on_touch_down(self, touch):
         if self.collide_point(*touch.pos):
+            touch.grab(self)
             if knspace.colors_screen.mode == 'normal':
                 clock_event = Clock.schedule_once(self.trigger_selection, 1)
                 touch.ud['trigger_selection'] = clock_event
             elif knspace.colors_screen.mode == 'selection':
                 self.parent.select_with_touch(self, touch)
 
+    def on_touch_move(self, touch):
+        if touch.grab_current is self and not self.collide_point(*touch.pos):
+            Clock.unschedule(touch.ud.get('trigger_selection'))
+
     def on_touch_up(self, touch):
         Clock.unschedule(touch.ud.get('trigger_selection'))
+        touch.ungrab(self)
 
     def on_selected(self, instance, selected):
         if selected:

@@ -296,13 +296,19 @@ class ColorSelectBox(Widget):
 
     def on_touch_down(self, touch):
         if self.collide_point(*touch.pos):
+            touch.grab(self)
             clock_event = Clock.schedule_once(self.view_color, 1)
-            touch.ud['trigger_selection'] = clock_event
+            touch.ud['view_color'] = clock_event
+
+    def on_touch_move(self, touch):
+        if touch.grab_current is self and not self.collide_point(*touch.pos):
+            Clock.unschedule(touch.ud.get('view_color'))
 
     def on_touch_up(self, touch):
-        Clock.unschedule(touch.ud.get('trigger_selection'))
-        if self.collide_point(*touch.pos):
+        Clock.unschedule(touch.ud.get('view_color'))
+        if touch.grab_current is self and self.collide_point(*touch.pos):
             self.color = knspace.lookup_screen.color
+        touch.ungrab(self)
 
     def view_color(self, dt):
         if self.color.alpha:
