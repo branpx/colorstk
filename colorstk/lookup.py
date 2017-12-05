@@ -100,25 +100,26 @@ class LookupScreen(KNSpaceBehavior, BoxLayout, Screen):
             color_box.color = color
 
     def random_color(self):
-        self.history.append(self.color)
-        self.ids.prev_button.disabled = False
-        del self.history_next[:]
-        self.ids.next_button.disabled = True
+        self.add_to_history(self.color)
         self.color = grapefruit.Color(tuple(random.random() for _ in range(3)))
 
     def blend_colors(self):
         blend_color1 = self.ids.color_select1.color
         blend_color2 = self.ids.color_select2.color
         if blend_color1.alpha and blend_color2.alpha:
-            self.history.append(self.color)
-            self.ids.prev_button.disabled = False
-            del self.history_next[:]
-            self.ids.next_button.disabled = True
+            self.add_to_history(self.color)
             self.color = blend_color1.blend(blend_color2)
 
     def add_to_palette(self):
         knspace.palettes_screen.mode = 'add'
         App.get_running_app().root.current = 'palettes'
+
+    def add_to_history(self, color, next_disable=True):
+        self.history.append(color)
+        self.ids.prev_button.disabled = False
+        if next_disable:
+            del self.history_next[:]
+            self.ids.next_button.disabled = True
 
     def previous_color(self):
         if len(self.history):
@@ -160,8 +161,7 @@ class ValueDisplay(GridLayout):
 
     def update_color(self):
         lookup_screen = knspace.lookup_screen
-        lookup_screen.history.append(lookup_screen.color)
-        lookup_screen.ids.prev_button.disabled = False
+        lookup_screen.add_to_history(lookup_screen.color, next_disable=False)
         if self.color_space == 'Hex':
             lookup_screen.color = grapefruit.Color.from_html(*self.value)
         elif self.color_space == 'sRGB':
@@ -282,10 +282,7 @@ class ColorBox(Widget):
     def on_touch_down(self, touch):
         if self.collide_point(*touch.pos):
             lookup_screen = knspace.lookup_screen
-            lookup_screen.history.append(lookup_screen.color)
-            lookup_screen.ids.prev_button.disabled = False
-            del lookup_screen.history_next[:]
-            lookup_screen.ids.next_button.disabled = True
+            lookup_screen.add_to_history(lookup_screen.color)
             lookup_screen.color = self.color
 
 
