@@ -4,6 +4,7 @@ import re
 
 import grapefruit
 from kivy.app import App
+from kivy.clock import Clock
 from kivy.lang.builder import Builder
 from kivy.properties import (NumericProperty,
                              ObjectProperty,
@@ -286,11 +287,25 @@ class ColorBox(Widget):
             lookup_screen.color = self.color
 
 
-class ColorSelectBox(ColorBox):
+class ColorSelectBox(Widget):
+    color = ObjectProperty(grapefruit.Color((1, 1, 1)))
+
     def __init__(self, **kwargs):
         super(ColorSelectBox, self).__init__(**kwargs)
         self.color.alpha = 0
 
     def on_touch_down(self, touch):
         if self.collide_point(*touch.pos):
+            clock_event = Clock.schedule_once(self.view_color, 1)
+            touch.ud['trigger_selection'] = clock_event
+
+    def on_touch_up(self, touch):
+        Clock.unschedule(touch.ud.get('trigger_selection'))
+        if self.collide_point(*touch.pos):
             self.color = knspace.lookup_screen.color
+
+    def view_color(self, dt):
+        if self.color.alpha:
+            lookup_screen = knspace.lookup_screen
+            lookup_screen.add_to_history(lookup_screen.color)
+            lookup_screen.color = self.color
