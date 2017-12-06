@@ -73,32 +73,47 @@
                             size: '200dp', '100dp'
                             color: root.color
 
-                        InfoLabel:
-                            text: 'Color Name: ' + root.color_name
+                        StackableRow:
+                            InfoLabel:
+                                text: 'Color Name: '
+                            InfoText:
+                                text: root.color_name
 
-                        InfoLabel:
-                            text: 'Websafe: ' + getattr(root.websafe_color, 'html')
+                        StackableRow:
+                            InfoLabel:
+                                text: 'Websafe: '
+                            InfoText:
+                                text: getattr(root.websafe_color, 'html')
 
                         ColorBox:
                             width: '100dp'
                             color: root.websafe_color
 
-                        InfoLabel:
-                            text: 'Greyscale: ' + getattr(root.greyscale_color, 'html')
+                        StackableRow:
+                            InfoLabel:
+                                text: 'Greyscale: '
+                            InfoText:
+                                text: getattr(root.greyscale_color, 'html')
 
                         ColorBox:
                             width: '100dp'
                             color: root.greyscale_color
 
-                        InfoLabel:
-                            text: 'Complementary: ' + getattr(root.complementary_color, 'html')
+                        StackableRow:
+                            InfoLabel:
+                                text: 'Complementary: '
+                            InfoText:
+                                text: getattr(root.complementary_color, 'html')
 
                         ColorBox:
                             width: '100dp'
                             color: root.complementary_color
 
-                        InfoLabel:
-                            text: 'RYB Hue: ' + str(root.ryb_hue)
+                        StackableRow:
+                            InfoLabel:
+                                text: 'RYB Hue: '
+                            InfoText:
+                                text: str(root.ryb_hue)
 
             TabbedPanelItem:
                 text: 'Schemes'
@@ -115,7 +130,7 @@
                         InfoLabel:
                             text: 'Monochrome Scheme:'
 
-                        SchemeGrid:
+                        StackableRow:
                             id: monochrome_grid
 
                             ColorBox:
@@ -129,7 +144,7 @@
                         InfoLabel:
                             text: 'Triadic Scheme:'
 
-                        SchemeGrid:
+                        StackableRow:
                             id: triadic_grid
 
                             ColorBox:
@@ -139,7 +154,7 @@
                         InfoLabel:
                             text: 'Tetradic Scheme:'
 
-                        SchemeGrid:
+                        StackableRow:
                             id: tetradic_grid
 
                             ColorBox:
@@ -151,7 +166,7 @@
                         InfoLabel:
                             text: 'Analogous Scheme:'
 
-                        SchemeGrid:
+                        StackableRow:
                             id: analogous_grid
 
                             ColorBox:
@@ -170,11 +185,7 @@
                         spacing: '25dp'
                         padding: '25dp', '25dp'
 
-                        GridLayout:
-                            rows: 1
-                            size_hint: None, None
-                            width: self.minimum_width
-                            height: self.minimum_height
+                        StackableRow:
                             spacing: '25dp'
 
                             ColorSelectBox:
@@ -259,7 +270,7 @@
             joint: 'miter'
 
 
-<SchemeGrid@GridLayout>:
+<StackableRow@GridLayout>:
     rows: 1
     size_hint: None, None
     width: self.minimum_width
@@ -272,3 +283,16 @@
     size: self.texture_size
     font_size: '15dp'
     valign: 'bottom'
+
+
+<InfoText@TextInput>:
+    size_hint: None, None
+    width: self._get_text_width(self.text, self.tab_width, self._label_cached)
+    height: '30dp'
+    font_size: '15dp'
+    foreground_color: 1, 1, 1, 1
+    background_color: 0, 0, 0, 0
+    cursor_color: 0, 0, 0, 0
+    padding: 0, 12, 0, 0
+    multiline: False
+    readonly: True
