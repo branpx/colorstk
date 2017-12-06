@@ -2,6 +2,7 @@ from kivy.app import App
 from kivy.uix.screenmanager import (NoTransition,
                                     Screen,
                                     ScreenManager)
+from kivy.uix.popup import Popup
 
 import canvas
 import lookup
@@ -10,7 +11,7 @@ import picker
 import settings
 
 
-class AboutScreen(Screen):
+class AboutPopup(Popup):
     pass
 
 
@@ -23,7 +24,6 @@ class ColorsTKApp(App):
         screen_manager.add_widget(palettes.ColorsScreen(name='colors'))
         screen_manager.add_widget(canvas.CanvasScreen(name='canvas'))
         screen_manager.add_widget(settings.SettingsScreen(name='settings'))
-        screen_manager.add_widget(AboutScreen(name='about'))
         return screen_manager
 
 
