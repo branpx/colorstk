@@ -27,8 +27,10 @@
                     elif root.mode == 'selection': \
                     palette_stack.clear_selection(); \
                     action_view.remove_widget(root.delete_button); \
+                    action_view.add_widget(root.new_button); \
                     root.mode = 'normal'
             ActionButton:
+                id: new_button
                 text: 'New'
                 on_release: Factory.NewPalettePopup().open()
 

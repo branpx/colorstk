@@ -29,6 +29,7 @@ class PalettesScreen(KNSpaceBehavior, BoxLayout, Screen):
     def __init__(self, **kwargs):
         super(PalettesScreen, self).__init__(**kwargs)
         self.mode = 'normal'
+        self.new_button = self.ids.new_button
         self.delete_button = ActionButton(
             text='Delete', on_release=self.delete_palette)
         self.palettes = JsonStore('palettes.json')
@@ -48,6 +49,7 @@ class PalettesScreen(KNSpaceBehavior, BoxLayout, Screen):
         elif mode == 'selection':
             action_previous.title = 'Selection'
             action_previous.with_previous = True
+            action_view.remove_widget(self.new_button)
             action_view.add_widget(self.delete_button)
 
     def delete_palette(self, button=None):
@@ -56,6 +58,7 @@ class PalettesScreen(KNSpaceBehavior, BoxLayout, Screen):
             self.palettes.delete(palette.name)
         self.ids.palette_stack.clear_selection()
         self.ids.action_view.remove_widget(self.delete_button)
+        self.ids.action_view.add_widget(self.new_button)
         self.mode = 'normal'
 
 
