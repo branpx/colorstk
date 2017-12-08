@@ -153,7 +153,7 @@ class Palette(GridLayout):
 
 
 class PaletteColor(Widget):
-    color = ObjectProperty()
+    color = ListProperty()
     selected = BooleanProperty(False)
 
     def on_touch_down(self, touch):

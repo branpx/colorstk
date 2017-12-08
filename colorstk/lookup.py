@@ -7,7 +7,8 @@ import grapefruit
 from kivy.app import App
 from kivy.clock import Clock
 from kivy.lang.builder import Builder
-from kivy.properties import (ListProperty,
+from kivy.properties import (BooleanProperty,
+                             ListProperty,
                              NumericProperty,
                              ObjectProperty,
                              StringProperty)
@@ -31,6 +32,7 @@ class LookupScreen(KNSpaceBehavior, BoxLayout, Screen):
     greyscale_color = ObjectProperty()
     complementary_color = ObjectProperty()
     ryb_hue = NumericProperty()
+    detach_values = BooleanProperty(True)
     named_colors = {value: name for name, value in
                     grapefruit.NAMED_COLOR.items()}
 
@@ -64,7 +66,7 @@ class LookupScreen(KNSpaceBehavior, BoxLayout, Screen):
         self.make_schemes()
 
     def set_color(self, value):
-        self.color = grapefruit.Color(value, wref=self.white_point)
+        self.color = grapefruit.Color(tuple(value), wref=self.white_point)
 
     def get_value(self, color_space):
             if color_space == 'Hex':
