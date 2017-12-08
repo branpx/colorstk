@@ -93,7 +93,7 @@ class ColorsTKApp(App):
                          'CIE-XYZ', 'CIE-LAB', 'CMY', 'CMYK']},
             {'type': 'options_toggle',
              'title': 'White point',
-             'desc': 'White reference point for CIE-LAB/CIE-XYZ conversions',
+             'desc': 'White reference point for CIE-LAB conversions',
              'section': 'color',
              'key': 'white_point',
              'options': ['A', 'B', 'C', 'D50', 'D55', 'D65', 'D75', 'E',

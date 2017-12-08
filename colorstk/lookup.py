@@ -1,4 +1,5 @@
-from collections import deque, OrderedDict
+from collections import deque
+import json
 import random
 import re
 
@@ -6,7 +7,8 @@ import grapefruit
 from kivy.app import App
 from kivy.clock import Clock
 from kivy.lang.builder import Builder
-from kivy.properties import (NumericProperty,
+from kivy.properties import (ListProperty,
+                             NumericProperty,
                              ObjectProperty,
                              StringProperty)
 from kivy.uix.behaviors.knspace import knspace, KNSpaceBehavior
@@ -22,6 +24,8 @@ Builder.load_file('lookup.kv')
 
 class LookupScreen(KNSpaceBehavior, BoxLayout, Screen):
     color = ObjectProperty()
+    white_point = ListProperty()
+    scheme_mode = StringProperty()
     color_name = StringProperty()
     websafe_color = ObjectProperty()
     greyscale_color = ObjectProperty()
@@ -31,54 +35,65 @@ class LookupScreen(KNSpaceBehavior, BoxLayout, Screen):
                     grapefruit.NAMED_COLOR.items()}
 
     def __init__(self, **kwargs):
+        config = App.get_running_app().config
+        observer_angle = config.get('color', 'observer_angle')
+        white_point_name = config.get('color', 'white_point')
+        if observer_angle == 'CIE 1931':
+            white_point_name = 'std_' + white_point_name
+        elif observer_angle == 'CIE 1964':
+            white_point_name = 'sup_' + white_point_name
+        self.white_point = grapefruit.WHITE_REFERENCE[white_point_name]
+        self.scheme_mode = config.get('color', 'scheme_mode').lower()
         self.history = deque(maxlen=30)
         self.history_next = []
-        self.color = grapefruit.Color((0, 0, 0))
+        self.color = grapefruit.Color((0, 0, 0), wref=self.white_point)
         self.set_color_info()
         super(LookupScreen, self).__init__(**kwargs)
         self.make_schemes()
-        displays = [('Hex', [self.color.html]), ('sRGB', self.color.ints),
-                    ('HSL', self.color.hsl), ('HSV', self.color.hsv),
-                    ('YIQ', self.color.yiq), ('YUV', self.color.yuv),
-                    ('CIE-XYZ', self.color.xyz), ('CIE-LAB', self.color.lab),
-                    ('CMY', self.color.cmy), ('CMYK', self.color.cmyk)]
-        self.color_values = OrderedDict(displays)
-        for color_space, value in self.color_values.items():
-            self.ids.value_grid.add_widget(
-                ValueDisplay(color_space, value))
+        color_spaces = json.loads(config.get('ui', 'color_spaces'))
+        for color_space in color_spaces:
+            self.ids.value_grid.add_widget( ValueDisplay(color_space))
 
     def on_color(self, instance, color):
         if not self.color.is_legal:
             return
         for value_display in self.ids.value_grid.children:
-            if value_display.color_space == 'Hex':
-                value_display.value = [self.color.html]
-            elif value_display.color_space == 'sRGB':
-                value_display.value = list(self.color.ints)
-            elif value_display.color_space == 'HSL':
-                value_display.value = list(self.color.hsl)
-            elif value_display.color_space == 'HSV':
-                value_display.value = list(self.color.hsv)
-            elif value_display.color_space == 'YIQ':
-                value_display.value = list(self.color.yiq)
-            elif value_display.color_space == 'YUV':
-                value_display.value = list(self.color.yuv)
-            elif value_display.color_space == 'CIE-XYZ':
-                value_display.value = list(self.color.xyz)
-            elif value_display.color_space == 'CIE-LAB':
-                value_display.value = list(self.color.lab)
-            elif value_display.color_space == 'CMY':
-                value_display.value = list(self.color.cmy)
-            elif value_display.color_space == 'CMYK':
-                value_display.value = list(self.color.cmyk)
+            value_display.value = self.get_value(value_display.color_space)
             value_display.update_inputs()
         self.set_color_info()
         self.make_schemes()
 
+    def set_color(self, value):
+        self.color = grapefruit.Color(value, wref=self.white_point)
+
+    def get_value(self, color_space):
+            if color_space == 'Hex':
+                return [self.color.html]
+            elif color_space == 'sRGB':
+                return list(self.color.ints)
+            elif color_space == 'HSL':
+                return list(self.color.hsl)
+            elif color_space == 'HSV':
+                return list(self.color.hsv)
+            elif color_space == 'YIQ':
+                return list(self.color.yiq)
+            elif color_space == 'YUV':
+                return list(self.color.yuv)
+            elif color_space == 'CIE-XYZ':
+                return list(self.color.xyz)
+            elif color_space == 'CIE-LAB':
+                return list(self.color.lab)
+            elif color_space == 'CMY':
+                return list(self.color.cmy)
+            elif color_space == 'CMYK':
+                return list(self.color.cmyk)
+
     def set_color_info(self):
         self.color_name = self.named_colors.get(self.color.html, 'N/A')
-        self.websafe_color = grapefruit.Color(self.color.websafe)
-        self.greyscale_color = grapefruit.Color(self.color.greyscale)
+        self.websafe_color = grapefruit.Color(
+            self.color.websafe, wref=self.white_point)
+        self.greyscale_color = grapefruit.Color(
+            self.color.greyscale, wref=self.white_point)
         self.complementary_color = self.color.complementary_color()
         self.ryb_hue = round(grapefruit.rgb_to_ryb(self.color.hsl_hue), 3)
 
@@ -89,15 +104,15 @@ class LookupScreen(KNSpaceBehavior, BoxLayout, Screen):
             color_box.color = color
         for color_box, color in zip(
                 self.ids.triadic_grid.children,
-                self.color.make_triadic_scheme()):
+                self.color.make_triadic_scheme(mode=self.scheme_mode)):
             color_box.color = color
         for color_box, color in zip(
                 self.ids.tetradic_grid.children,
-                self.color.make_tetradic_scheme()):
+                self.color.make_tetradic_scheme(mode=self.scheme_mode)):
             color_box.color = color
         for color_box, color in zip(
                 self.ids.analogous_grid.children,
-                self.color.make_analogous_scheme()):
+                self.color.make_analogous_scheme(mode=self.scheme_mode)):
             color_box.color = color
 
     def random_color(self):
@@ -140,11 +155,14 @@ class LookupScreen(KNSpaceBehavior, BoxLayout, Screen):
 
 
 class ValueDisplay(GridLayout):
-    def __init__(self, color_space, value, **kwargs):
-        self.color_space = color_space
-        self.value = list(value)
+    color_space = StringProperty()
+    value = ListProperty()
+    value_inputs = ListProperty()
+
+    def __init__(self, color_space, **kwargs):
         super(ValueDisplay, self).__init__(**kwargs)
-        self.value_inputs = []
+        self.color_space = color_space
+        self.value = knspace.lookup_screen.get_value(color_space)
         for index in range(len(self.value)):
             if self.color_space == 'Hex':
                 value_input = ValueInput(0, self.color_space, width='90dp')
@@ -162,28 +180,39 @@ class ValueDisplay(GridLayout):
 
     def update_color(self):
         lookup_screen = knspace.lookup_screen
+        white_point = knspace.white_point
         lookup_screen.add_to_history(lookup_screen.color, next_disable=False)
         if self.color_space == 'Hex':
-            lookup_screen.color = grapefruit.Color.from_html(*self.value)
+            lookup_screen.color = grapefruit.Color.from_html(
+                *self.value, wref=white_point)
         elif self.color_space == 'sRGB':
             self.value = [val / 255 for val in self.value]
-            lookup_screen.color = grapefruit.Color.from_rgb(*self.value)
+            lookup_screen.color = grapefruit.Color.from_rgb(
+                *self.value, wref=white_point)
         elif self.color_space == 'HSL':
-            lookup_screen.color = grapefruit.Color.from_hsl(*self.value)
+            lookup_screen.color = grapefruit.Color.from_hsl(
+                *self.value, wref=white_point)
         elif self.color_space == 'HSV':
-            lookup_screen.color = grapefruit.Color.from_hsv(*self.value)
+            lookup_screen.color = grapefruit.Color.from_hsv(
+                *self.value, wref=white_point)
         elif self.color_space == 'YIQ':
-            lookup_screen.color = grapefruit.Color.from_yiq(*self.value)
+            lookup_screen.color = grapefruit.Color.from_yiq(
+                *self.value, wref=white_point)
         elif self.color_space == 'YUV':
-            lookup_screen.color = grapefruit.Color.from_yuv(*self.value)
+            lookup_screen.color = grapefruit.Color.from_yuv(
+                *self.value, wref=white_point)
         elif self.color_space == 'CIE-XYZ':
-            lookup_screen.color = grapefruit.Color.from_xyz(*self.value)
+            lookup_screen.color = grapefruit.Color.from_xyz(
+                *self.value, wref=white_point)
         elif self.color_space == 'CIE-LAB':
-            lookup_screen.color = grapefruit.Color.from_lab(*self.value)
+            lookup_screen.color = grapefruit.Color.from_lab(
+                *self.value, wref=white_point)
         elif self.color_space == 'CMY':
-            lookup_screen.color = grapefruit.Color.from_cmy(*self.value)
+            lookup_screen.color = grapefruit.Color.from_cmy(
+                *self.value, wref=white_point)
         elif self.color_space == 'CMYK':
-            lookup_screen.color = grapefruit.Color.from_cmyk(*self.value)
+            lookup_screen.color = grapefruit.Color.from_cmyk(
+                *self.value, wref=white_point)
         if lookup_screen.color.is_legal:
             del lookup_screen.history_next[:]
             lookup_screen.ids.next_button.disabled = True
@@ -195,6 +224,7 @@ class ValueDisplay(GridLayout):
 class ValueInput(TextInput):
     hex_pat = re.compile(u'^#?[0-9A-Fa-f]*$')
     float_pat = re.compile(u'^-?[0-9]*\\.?[0-9]*$')
+    index = NumericProperty()
 
     def __init__(self, index, color_space, **kwargs):
         super(ValueInput, self).__init__(**kwargs)
@@ -278,7 +308,7 @@ class ValueInput(TextInput):
 
 
 class ColorBox(Widget):
-    color = ObjectProperty(grapefruit.Color((1, 1, 1)))
+    color = ObjectProperty((0, 0, 0, 0))
 
     def on_touch_down(self, touch):
         if self.collide_point(*touch.pos):
@@ -288,11 +318,7 @@ class ColorBox(Widget):
 
 
 class ColorSelectBox(Widget):
-    color = ObjectProperty(grapefruit.Color((1, 1, 1)))
-
-    def __init__(self, **kwargs):
-        super(ColorSelectBox, self).__init__(**kwargs)
-        self.color.alpha = 0
+    color = ObjectProperty((0, 0, 0, 0))
 
     def on_touch_down(self, touch):
         if self.collide_point(*touch.pos):

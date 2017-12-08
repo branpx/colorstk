@@ -1,4 +1,3 @@
-import grapefruit
 from kivy.app import App
 from kivy.clock import Clock
 from kivy.factory import Factory
@@ -175,7 +174,7 @@ class PaletteColor(Widget):
         if touch.grab_current is self and self.collide_point(*touch.pos):
             if knspace.colors_screen.mode == 'normal':
                 screen_manager = App.get_running_app().root
-                knspace.lookup_screen.color = grapefruit.Color(self.color)
+                knspace.lookup_screen.set_color(self.color)
                 screen_manager.current = 'lookup'
         touch.ungrab(self)
 
