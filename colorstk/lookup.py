@@ -25,26 +25,23 @@ Builder.load_file('lookup.kv')
 
 class LookupScreen(KNSpaceBehavior, BoxLayout, Screen):
     color = ObjectProperty()
-    white_point = ListProperty()
-    scheme_mode = StringProperty()
     color_name = StringProperty()
     websafe_color = ObjectProperty()
     greyscale_color = ObjectProperty()
     complementary_color = ObjectProperty()
     ryb_hue = NumericProperty()
+    white_point = ListProperty()
+    scheme_mode = StringProperty()
+    color_spaces = ListProperty()
     detach_values = BooleanProperty()
     named_colors = {value: name for name, value in
                     grapefruit.NAMED_COLOR.items()}
 
     def __init__(self, **kwargs):
         config = App.get_running_app().config
-        observer_angle = config.get('color', 'observer_angle')
         white_point_name = config.get('color', 'white_point')
-        if observer_angle == 'CIE 1931':
-            white_point_name = 'std_' + white_point_name
-        elif observer_angle == 'CIE 1964':
-            white_point_name = 'sup_' + white_point_name
-        self.white_point = grapefruit.WHITE_REFERENCE[white_point_name]
+        observer_angle = config.get('color', 'observer_angle')
+        self.set_white_point(white_point_name, observer_angle)
         self.scheme_mode = config.get('color', 'scheme_mode').lower()
         self.detach_values = int(config.get('ui', 'detach_values'))
         self.history = deque(maxlen=30)
@@ -53,9 +50,7 @@ class LookupScreen(KNSpaceBehavior, BoxLayout, Screen):
         self.set_color_info()
         super(LookupScreen, self).__init__(**kwargs)
         self.make_schemes()
-        color_spaces = json.loads(config.get('ui', 'color_spaces'))
-        for color_space in color_spaces:
-            self.ids.value_grid.add_widget(ValueDisplay(color_space))
+        self.color_spaces = json.loads(config.get('ui', 'color_spaces'))
 
     def on_color(self, instance, color):
         if not self.color.is_legal:
@@ -66,8 +61,20 @@ class LookupScreen(KNSpaceBehavior, BoxLayout, Screen):
         self.set_color_info()
         self.make_schemes()
 
+    def on_color_spaces(self, instance, color_spaces):
+        self.ids.value_grid.clear_widgets()
+        for color_space in self.color_spaces:
+            self.ids.value_grid.add_widget(ValueDisplay(color_space))
+
     def set_color(self, value):
         self.color = grapefruit.Color(tuple(value), wref=self.white_point)
+
+    def set_white_point(self, name, observer):
+        if observer == 'CIE 1931':
+            name = 'std_' + name
+        elif observer == 'CIE 1964':
+            name = 'sup_' + name
+        self.white_point = grapefruit.WHITE_REFERENCE[name]
 
     def get_value(self, color_space):
             if color_space == 'Hex':

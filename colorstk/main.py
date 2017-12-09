@@ -2,6 +2,7 @@ import json
 
 from kivy.app import App
 from kivy.properties import BooleanProperty, ListProperty
+from kivy.uix.behaviors.knspace import knspace
 from kivy.uix.popup import Popup
 from kivy.uix.screenmanager import (NoTransition,
                                     Screen,
@@ -35,6 +36,8 @@ class SettingOptionsToggle(SettingItem):
                 value_list.append(toggle_button.text)
             elif toggle_button.state == 'normal':
                 value_list.remove(toggle_button.text)
+            value_list = [option for option in self.options
+                          if option in value_list]
             self.value = json.dumps(value_list)
         else:
             self.value = toggle_button.text
@@ -113,6 +116,21 @@ class ColorsTKApp(App):
              'options': ['RGB', 'RYB']}
             ])
         settings.add_json_panel('Settings', self.config, data=json_panel)
+
+    def on_config_change(self, config, section, key, value):
+        lookup_screen = knspace.lookup_screen
+        if key == 'detach_values':
+            lookup_screen.detach_values = int(value)
+        elif key == 'color_spaces':
+            lookup_screen.color_spaces = json.loads(value)
+        elif key == 'white_point':
+            lookup_screen.set_white_point(
+                value, config.get('color', 'observer_angle'))
+        elif key == 'observer_angle':
+            lookup_screen.set_white_point(
+                config.get('color', 'white_point'), value)
+        elif key == 'scheme_mode':
+            lookup_screen.scheme_mode = value.lower()
 
 
 if __name__ == '__main__':
