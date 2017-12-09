@@ -32,7 +32,7 @@ class LookupScreen(KNSpaceBehavior, BoxLayout, Screen):
     greyscale_color = ObjectProperty()
     complementary_color = ObjectProperty()
     ryb_hue = NumericProperty()
-    detach_values = BooleanProperty(True)
+    detach_values = BooleanProperty()
     named_colors = {value: name for name, value in
                     grapefruit.NAMED_COLOR.items()}
 
@@ -46,6 +46,7 @@ class LookupScreen(KNSpaceBehavior, BoxLayout, Screen):
             white_point_name = 'sup_' + white_point_name
         self.white_point = grapefruit.WHITE_REFERENCE[white_point_name]
         self.scheme_mode = config.get('color', 'scheme_mode').lower()
+        self.detach_values = int(config.get('ui', 'detach_values'))
         self.history = deque(maxlen=30)
         self.history_next = []
         self.color = grapefruit.Color((0, 0, 0), wref=self.white_point)
@@ -54,7 +55,7 @@ class LookupScreen(KNSpaceBehavior, BoxLayout, Screen):
         self.make_schemes()
         color_spaces = json.loads(config.get('ui', 'color_spaces'))
         for color_space in color_spaces:
-            self.ids.value_grid.add_widget( ValueDisplay(color_space))
+            self.ids.value_grid.add_widget(ValueDisplay(color_space))
 
     def on_color(self, instance, color):
         if not self.color.is_legal:
@@ -182,7 +183,7 @@ class ValueDisplay(GridLayout):
 
     def update_color(self):
         lookup_screen = knspace.lookup_screen
-        white_point = knspace.white_point
+        white_point = lookup_screen.white_point
         lookup_screen.add_to_history(lookup_screen.color, next_disable=False)
         if self.color_space == 'Hex':
             lookup_screen.color = grapefruit.Color.from_html(
@@ -320,7 +321,7 @@ class ColorBox(Widget):
 
 
 class ColorSelectBox(Widget):
-    color = ObjectProperty((0, 0, 0, 0))
+    color = ObjectProperty(grapefruit.Color((0, 0, 0), alpha=0))
 
     def on_touch_down(self, touch):
         if self.collide_point(*touch.pos):

@@ -53,6 +53,8 @@
                 padding: 0, '25dp'
 
         TabbedPanel:
+            background_color: 0.2, 0.2, 0.2, 1
+            background_image: ''
             do_default_tab: False
             tab_height: '30dp'
 
@@ -229,15 +231,6 @@
     cursor_color: 0, 0, 0, 1
     multiline: False
     write_tab: False
-
-
-<TabbedPanelContent>:
-    canvas:
-        Color:
-            rgba: 0.2, 0.2, 0.2, 1
-        Rectangle:
-            pos: self.pos
-            size: self.size
 
 
 <StripLayout>:
