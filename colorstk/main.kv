@@ -27,6 +27,16 @@
             height: self.minimum_height
 
 
+<SettingsPopup>:
+    orientation: 'vertical'
+
+    ActionBar:
+        ActionView:
+            ActionPrevious:
+                title: 'Settings'
+                on_release: App.get_running_app().settings_popup.dismiss()
+
+
 <ScreenMenu@ModalView>:
     pos_hint: {'x': 0, 'y': 0}
     size_hint_x: None
