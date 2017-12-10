@@ -17,16 +17,6 @@
         readonly: True
 
 
-<OptionsTogglePopup>:
-    size_hint: 0.6, 0.8
-    ScrollView:
-        GridLayout:
-            id: toggle_button_grid
-            cols: 1
-            size_hint_y: None
-            height: self.minimum_height
-
-
 <SettingsPopup>:
     orientation: 'vertical'
 
@@ -35,6 +25,16 @@
             ActionPrevious:
                 title: 'Settings'
                 on_release: App.get_running_app().settings_popup.dismiss()
+
+
+<OptionsTogglePopup>:
+    size_hint: 0.6, 0.8
+    ScrollView:
+        GridLayout:
+            id: toggle_button_grid
+            cols: 1
+            size_hint_y: None
+            height: self.minimum_height
 
 
 <ScreenMenu@ModalView>:

@@ -1,7 +1,9 @@
 import json
 
 from kivy.app import App
-from kivy.properties import BooleanProperty, ListProperty
+from kivy.properties import (BooleanProperty,
+                             ListProperty,
+                             ObjectProperty)
 from kivy.uix.behaviors.knspace import knspace
 from kivy.uix.boxlayout import BoxLayout
 from kivy.uix.modalview import ModalView
@@ -20,37 +22,48 @@ class AboutPopup(Popup):
     pass
 
 
-class OptionsTogglePopup(Popup):
-    pass
-
-
 class SettingsPopup(BoxLayout, ModalView):
     pass
 
 
+class OptionsTogglePopup(Popup):
+    setting_item = ObjectProperty()
+
+    def on_dismiss(self):
+        self.setting_item.write_option()
+
+
 class SettingOptionsToggle(SettingItem):
+    temp_value = ObjectProperty()
     options = ListProperty()
     multi_toggle = BooleanProperty(False)
+
+    def __init__(self, **kwargs):
+        super(SettingOptionsToggle, self).__init__(**kwargs)
+        self.temp_value = self.value
 
     def on_release(self):
         self.create_popup()
 
     def set_option(self, toggle_button):
         if self.multi_toggle:
-            value_list = json.loads(self.value)
+            value_list = json.loads(self.temp_value)
             if toggle_button.state == 'down':
                 value_list.append(toggle_button.text)
             elif toggle_button.state == 'normal':
                 value_list.remove(toggle_button.text)
             value_list = [option for option in self.options
                           if option in value_list]
-            self.value = json.dumps(value_list)
+            self.temp_value = json.dumps(value_list)
         else:
-            self.value = toggle_button.text
+            self.temp_value = toggle_button.text
             self.popup.dismiss()
 
+    def write_option(self):
+        self.value = self.temp_value
+
     def create_popup(self):
-        self.popup = OptionsTogglePopup(title=self.title)
+        self.popup = OptionsTogglePopup(title=self.title, setting_item=self)
         for option in self.options:
             state = 'down' if option in self.value else 'normal'
             toggle_button = ToggleButton(
