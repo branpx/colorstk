@@ -139,7 +139,7 @@ class Palette(GridLayout):
         touch.ungrab(self)
 
     def on_colors(self, instance, colors):
-        knspace.palettes_screen.palettes.put(self.name, colors=self.colors)
+        knspace.palettes_screen.palettes.put(self.name, colors=colors)
 
     def on_selected(self, instance, selected):
         if selected:
