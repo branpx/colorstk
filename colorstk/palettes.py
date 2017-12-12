@@ -134,7 +134,7 @@ class Palette(GridLayout):
                 knspace.colors_screen.load_colors(self)
                 screen_manager.current = 'colors'
             elif knspace.palettes_screen.mode == 'add':
-                self.colors.append(knspace.lookup_screen.color.rgb)
+                self.colors.append(list(knspace.lookup_screen.color.rgb))
                 knspace.palettes_screen.mode = 'normal'
         touch.ungrab(self)
 
