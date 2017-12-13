@@ -2,6 +2,24 @@
 #:import Factory kivy.factory.Factory
 
 
+<PopupWithActionBar>:
+    orientation: 'vertical'
+    background: ''
+
+    canvas:
+        Color:
+            rgba: 0.2, 0.2, 0.2, 1
+        Rectangle:
+            pos: self.pos
+            size: self.size
+
+    ActionBar:
+        ActionView:
+            ActionPrevious:
+                title: root.title
+                on_release: root.dismiss()
+
+
 <AboutPopup>:
     title: 'About'
     size_hint: 0.6, 0.8
@@ -17,18 +35,9 @@
         readonly: True
 
 
-<SettingsPopup>:
-    orientation: 'vertical'
-
-    ActionBar:
-        ActionView:
-            ActionPrevious:
-                title: 'Settings'
-                on_release: App.get_running_app().settings_popup.dismiss()
-
-
 <OptionsTogglePopup>:
     size_hint: 0.6, 0.8
+
     ScrollView:
         GridLayout:
             id: toggle_button_grid

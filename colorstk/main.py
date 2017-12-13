@@ -3,11 +3,11 @@ import json
 from kivy.app import App
 from kivy.properties import (BooleanProperty,
                              ListProperty,
-                             ObjectProperty)
+                             ObjectProperty,
+                             StringProperty)
 from kivy.uix.behaviors.knspace import knspace
 from kivy.uix.boxlayout import BoxLayout
 from kivy.uix.modalview import ModalView
-from kivy.uix.popup import Popup
 from kivy.uix.screenmanager import (NoTransition,
                                     Screen,
                                     ScreenManager)
@@ -18,15 +18,15 @@ import lookup
 import palettes
 
 
-class AboutPopup(Popup):
+class PopupWithActionBar(BoxLayout, ModalView):
+    title = StringProperty()
+
+
+class AboutPopup(PopupWithActionBar):
     pass
 
 
-class SettingsPopup(BoxLayout, ModalView):
-    pass
-
-
-class OptionsTogglePopup(Popup):
+class OptionsTogglePopup(PopupWithActionBar):
     setting_item = ObjectProperty()
 
     def on_dismiss(self):
@@ -135,7 +135,7 @@ class ColorsTKApp(App):
              'options': ['RGB', 'RYB']}
             ])
         settings.add_json_panel('Settings', self.config, data=json_panel)
-        self.settings_popup = SettingsPopup()
+        self.settings_popup = PopupWithActionBar(title='Settings')
         self.settings_popup.add_widget(settings)
 
     def display_settings(self, settings):
