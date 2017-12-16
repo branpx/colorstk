@@ -1,4 +1,5 @@
 #:import Factory kivy.factory.Factory
+#:import knspace kivy.uix.behaviors.knspace.knspace
 
 
 <LookupScreen>:
@@ -26,6 +27,7 @@
                 on_release: root.next_color()
 
     BoxLayout:
+        id: content
         padding: '20dp'
 
         canvas:
@@ -35,179 +37,25 @@
                 pos: self.pos
                 size: self.size
 
-        ScrollView:
-            canvas.before:
-                Color:
-                    rgba: 0.1, 0.1, 0.1, 1
-                Rectangle:
-                    pos: self.pos
-                    size: self.size
 
-            GridLayout:
-                id: value_grid
-                cols: 1
-                size_hint: None, None
-                width: self.minimum_width
-                height: self.minimum_height
-                spacing: '50dp'
-                padding: 0, '25dp'
+<ValueView@ScrollView>:
+    background_color: 0.1, 0.1, 0.1, 1
 
-        TabbedPanel:
-            background_color: 0.2, 0.2, 0.2, 1
-            background_image: ''
-            do_default_tab: False
-            tab_height: '30dp'
+    canvas.before:
+        Color:
+            rgba: self.background_color
+        Rectangle:
+            pos: self.pos
+            size: self.size
 
-            TabbedPanelItem:
-                text: 'Info'
-
-                ScrollView:
-                    GridLayout:
-                        cols: 1
-                        size_hint: None, None
-                        width: self.minimum_width
-                        height: self.minimum_height
-                        spacing: '25dp'
-                        padding: '25dp', '25dp'
-
-                        ColorBox:
-                            size: '200dp', '100dp'
-                            color: root.color
-
-                        StackableRow:
-                            InfoLabel:
-                                text: 'Color Name: '
-                            InfoText:
-                                text: root.color_name
-
-                        StackableRow:
-                            InfoLabel:
-                                text: 'Websafe: '
-                            InfoText:
-                                text: getattr(root.websafe_color, 'html')
-
-                        ColorBox:
-                            width: '100dp'
-                            color: root.websafe_color
-
-                        StackableRow:
-                            InfoLabel:
-                                text: 'Greyscale: '
-                            InfoText:
-                                text: getattr(root.greyscale_color, 'html')
-
-                        ColorBox:
-                            width: '100dp'
-                            color: root.greyscale_color
-
-                        StackableRow:
-                            InfoLabel:
-                                text: 'Complementary: '
-                            InfoText:
-                                text: getattr(root.complementary_color, 'html')
-
-                        ColorBox:
-                            width: '100dp'
-                            color: root.complementary_color
-
-                        StackableRow:
-                            InfoLabel:
-                                text: 'RYB Hue: '
-                            InfoText:
-                                text: str(root.ryb_hue)
-
-            TabbedPanelItem:
-                text: 'Schemes'
-
-                ScrollView:
-                    GridLayout:
-                        cols: 1
-                        size_hint: None, None
-                        width: self.minimum_width
-                        height: self.minimum_height
-                        spacing: '25dp'
-                        padding: '25dp', '25dp'
-
-                        InfoLabel:
-                            text: 'Monochrome Scheme:'
-
-                        StackableRow:
-                            id: monochrome_grid
-
-                            ColorBox:
-
-                            ColorBox:
-
-                            ColorBox:
-
-                            ColorBox:
-
-                        InfoLabel:
-                            text: 'Triadic Scheme:'
-
-                        StackableRow:
-                            id: triadic_grid
-
-                            ColorBox:
-
-                            ColorBox:
-
-                        InfoLabel:
-                            text: 'Tetradic Scheme:'
-
-                        StackableRow:
-                            id: tetradic_grid
-
-                            ColorBox:
-
-                            ColorBox:
-
-                            ColorBox:
-
-                        InfoLabel:
-                            text: 'Analogous Scheme:'
-
-                        StackableRow:
-                            id: analogous_grid
-
-                            ColorBox:
-
-                            ColorBox:
-
-            TabbedPanelItem:
-                text: 'Tools'
-
-                ScrollView:
-                    GridLayout:
-                        cols: 1
-                        size_hint: None, None
-                        width: self.minimum_width
-                        height: self.minimum_height
-                        spacing: '25dp'
-                        padding: '25dp', '25dp'
-
-                        StackableRow:
-                            spacing: '25dp'
-
-                            ColorSelectBox:
-                                id: color_select1
-                                width: '75dp'
-
-                            ColorSelectBox:
-                                id: color_select2
-                                width: '75dp'
-
-                        Button:
-                            size_hint: None, None
-                            size: '200dp', '50dp'
-                            text: 'Blend colors'
-                            on_release: root.blend_colors()
-
-                        Button:
-                            size_hint: None, None
-                            size: '200dp', '50dp'
-                            text: 'Random color'
-                            on_release: root.random_color()
+    GridLayout:
+        id: value_grid
+        cols: 1
+        size_hint: None, None
+        width: self.minimum_width
+        height: self.minimum_height
+        spacing: '50dp'
+        padding: 0, '25dp'
 
 
 <ValueDisplay>:
@@ -233,6 +81,13 @@
     write_tab: False
 
 
+<TabbedPanel>:
+    background_color: 0.2, 0.2, 0.2, 1
+    background_image: ''
+    do_default_tab: False
+    tab_height: '30dp'
+
+
 <StripLayout>:
     canvas:
         Color:
@@ -240,6 +95,160 @@
         Rectangle:
             pos: self.pos
             size: self.size
+
+
+<InfoTab@TabbedPanelItem>:
+    text: 'Info'
+
+    ScrollView:
+        GridLayout:
+            cols: 1
+            size_hint: None, None
+            width: self.minimum_width
+            height: self.minimum_height
+            spacing: '25dp'
+            padding: '25dp', '25dp'
+
+            ColorBox:
+                size: '200dp', '100dp'
+                color: knspace.lookup_screen.color
+
+            StackableRow:
+                InfoLabel:
+                    text: 'Color Name: '
+                InfoText:
+                    text: knspace.lookup_screen.color_name
+
+            StackableRow:
+                InfoLabel:
+                    text: 'Websafe: '
+                InfoText:
+                    text: getattr(knspace.lookup_screen.websafe_color, 'html')
+
+            ColorBox:
+                width: '100dp'
+                color: knspace.lookup_screen.websafe_color
+
+            StackableRow:
+                InfoLabel:
+                    text: 'Greyscale: '
+                InfoText:
+                    text: getattr(knspace.lookup_screen.greyscale_color, 'html')
+
+            ColorBox:
+                width: '100dp'
+                color: knspace.lookup_screen.greyscale_color
+
+            StackableRow:
+                InfoLabel:
+                    text: 'Complementary: '
+                InfoText:
+                    text: getattr(knspace.lookup_screen.complementary_color, 'html')
+
+            ColorBox:
+                width: '100dp'
+                color: knspace.lookup_screen.complementary_color
+
+            StackableRow:
+                InfoLabel:
+                    text: 'RYB Hue: '
+                InfoText:
+                    text: str(knspace.lookup_screen.ryb_hue)
+
+
+<SchemesTab@TabbedPanelItem>:
+    text: 'Schemes'
+
+    ScrollView:
+        GridLayout:
+            cols: 1
+            size_hint: None, None
+            width: self.minimum_width
+            height: self.minimum_height
+            spacing: '25dp'
+            padding: '25dp', '25dp'
+
+            InfoLabel:
+                text: 'Monochrome Scheme:'
+
+            StackableRow:
+                id: monochrome_grid
+
+                ColorBox:
+
+                ColorBox:
+
+                ColorBox:
+
+                ColorBox:
+
+            InfoLabel:
+                text: 'Triadic Scheme:'
+
+            StackableRow:
+                id: triadic_grid
+
+                ColorBox:
+
+                ColorBox:
+
+            InfoLabel:
+                text: 'Tetradic Scheme:'
+
+            StackableRow:
+                id: tetradic_grid
+
+                ColorBox:
+
+                ColorBox:
+
+                ColorBox:
+
+            InfoLabel:
+                text: 'Analogous Scheme:'
+
+            StackableRow:
+                id: analogous_grid
+
+                ColorBox:
+
+                ColorBox:
+
+
+<ToolsTab@TabbedPanelItem>:
+    text: 'Tools'
+
+    ScrollView:
+        GridLayout:
+            cols: 1
+            size_hint: None, None
+            width: self.minimum_width
+            height: self.minimum_height
+            spacing: '25dp'
+            padding: '25dp', '25dp'
+
+            StackableRow:
+                spacing: '25dp'
+
+                ColorSelectBox:
+                    id: color_select1
+                    width: '75dp'
+
+                ColorSelectBox:
+                    id: color_select2
+                    width: '75dp'
+
+            Button:
+                size_hint: None, None
+                size: '200dp', '50dp'
+                text: 'Blend colors'
+                on_release: knspace.lookup_screen.blend_colors()
+
+            Button:
+                size_hint: None, None
+                size: '200dp', '50dp'
+                text: 'Random color'
+                on_release: knspace.lookup_screen.random_color()
 
 
 <ColorBox,ColorSelectBox>:

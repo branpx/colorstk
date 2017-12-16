@@ -6,6 +6,7 @@ import re
 import grapefruit
 from kivy.app import App
 from kivy.clock import Clock
+from kivy.factory import Factory
 from kivy.lang.builder import Builder
 from kivy.properties import (BooleanProperty,
                              ListProperty,
@@ -16,6 +17,7 @@ from kivy.uix.behaviors.knspace import knspace, KNSpaceBehavior
 from kivy.uix.boxlayout import BoxLayout
 from kivy.uix.gridlayout import GridLayout
 from kivy.uix.screenmanager import Screen
+from kivy.uix.tabbedpanel import TabbedPanel, TabbedPanelItem
 from kivy.uix.textinput import TextInput
 from kivy.uix.widget import Widget
 
@@ -43,28 +45,61 @@ class LookupScreen(KNSpaceBehavior, BoxLayout, Screen):
         observer_angle = config.get('color', 'observer_angle')
         self.set_white_point(white_point_name, observer_angle)
         self.scheme_mode = config.get('color', 'scheme_mode').lower()
+        self.color_spaces = json.loads(config.get('ui', 'color_spaces'))
         self.detach_values = int(config.get('ui', 'detach_values'))
         self.history = deque(maxlen=30)
         self.history_next = []
         self.color = grapefruit.Color((0, 0, 0), wref=self.white_point)
         self.set_color_info()
         super(LookupScreen, self).__init__(**kwargs)
+        self.value_view = Factory.ValueView()
+        self.tabbed_panel = TabbedPanel()
+        self.info_tab = Factory.InfoTab()
+        self.schemes_tab = Factory.SchemesTab()
+        self.tools_tab = Factory.ToolsTab()
+        self.load_content()
+        self.load_value_displays()
         self.make_schemes()
-        self.color_spaces = json.loads(config.get('ui', 'color_spaces'))
 
     def on_color(self, instance, color):
         if not self.color.is_legal:
             return
-        for value_display in self.ids.value_grid.children:
+        for value_display in self.value_view.ids.value_grid.children:
             value_display.value = self.get_value(value_display.color_space)
             value_display.update_inputs()
         self.set_color_info()
         self.make_schemes()
 
     def on_color_spaces(self, instance, color_spaces):
-        self.ids.value_grid.clear_widgets()
+        self.value_view.ids.value_grid.clear_widgets()
+        self.load_value_displays()
+
+    def load_value_displays(self):
         for color_space in self.color_spaces:
-            self.ids.value_grid.add_widget(ValueDisplay(color_space))
+            self.value_view.ids.value_grid.add_widget(
+                ValueDisplay(color_space))
+
+    def on_detach_values(self, instance, detach_values):
+        self.tabbed_panel.clear_widgets()
+        self.tabbed_panel.clear_tabs()
+        self.ids.content.clear_widgets()
+        self.load_content()
+
+    def load_content(self):
+        if not self.detach_values:
+            self.value_view.background_color[3] = 0
+            values_tab = TabbedPanelItem(
+                text='Values', content=self.value_view)
+            self.tabbed_panel.add_widget(values_tab)
+            self.tabbed_panel.switch_to(values_tab)
+        self.tabbed_panel.add_widget(self.info_tab)
+        self.tabbed_panel.add_widget(self.schemes_tab)
+        self.tabbed_panel.add_widget(self.tools_tab)
+        if self.detach_values:
+            self.value_view.background_color[3] = 1
+            self.ids.content.add_widget(self.value_view)
+            self.tabbed_panel.switch_to(self.info_tab)
+        self.ids.content.add_widget(self.tabbed_panel)
 
     def set_color(self, value):
         self.color = grapefruit.Color(tuple(value), wref=self.white_point)
@@ -109,19 +144,19 @@ class LookupScreen(KNSpaceBehavior, BoxLayout, Screen):
 
     def make_schemes(self):
         for color_box, color in zip(
-                self.ids.monochrome_grid.children,
+                self.schemes_tab.ids.monochrome_grid.children,
                 self.color.make_monochrome_scheme()):
             color_box.color = color
         for color_box, color in zip(
-                self.ids.triadic_grid.children,
+                self.schemes_tab.ids.triadic_grid.children,
                 self.color.make_triadic_scheme(mode=self.scheme_mode)):
             color_box.color = color
         for color_box, color in zip(
-                self.ids.tetradic_grid.children,
+                self.schemes_tab.ids.tetradic_grid.children,
                 self.color.make_tetradic_scheme(mode=self.scheme_mode)):
             color_box.color = color
         for color_box, color in zip(
-                self.ids.analogous_grid.children,
+                self.schemes_tab.ids.analogous_grid.children,
                 self.color.make_analogous_scheme(mode=self.scheme_mode)):
             color_box.color = color
 
@@ -130,8 +165,8 @@ class LookupScreen(KNSpaceBehavior, BoxLayout, Screen):
         self.color = grapefruit.Color(tuple(random.random() for _ in range(3)))
 
     def blend_colors(self):
-        blend_color1 = self.ids.color_select1.color
-        blend_color2 = self.ids.color_select2.color
+        blend_color1 = self.tools_tab.ids.color_select1.color
+        blend_color2 = self.tools_tab.ids.color_select2.color
         if blend_color1.alpha and blend_color2.alpha:
             self.add_to_history(self.color)
             self.color = blend_color1.blend(blend_color2)
