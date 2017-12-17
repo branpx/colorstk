@@ -1,7 +1,3 @@
-#:import Factory kivy.factory.Factory
-#:import knspace kivy.uix.behaviors.knspace.knspace
-
-
 <LookupScreen>:
     knsname: 'lookup_screen'
     orientation: 'vertical'
@@ -107,7 +103,7 @@
             width: self.minimum_width
             height: self.minimum_height
             spacing: '25dp'
-            padding: '25dp', '25dp'
+            padding: '25dp'
 
             ColorBox:
                 size: '200dp', '100dp'
@@ -166,7 +162,7 @@
             width: self.minimum_width
             height: self.minimum_height
             spacing: '25dp'
-            padding: '25dp', '25dp'
+            padding: '25dp'
 
             InfoLabel:
                 text: 'Monochrome Scheme:'
@@ -175,11 +171,8 @@
                 id: monochrome_grid
 
                 ColorBox:
-
                 ColorBox:
-
                 ColorBox:
-
                 ColorBox:
 
             InfoLabel:
@@ -189,7 +182,6 @@
                 id: triadic_grid
 
                 ColorBox:
-
                 ColorBox:
 
             InfoLabel:
@@ -199,9 +191,7 @@
                 id: tetradic_grid
 
                 ColorBox:
-
                 ColorBox:
-
                 ColorBox:
 
             InfoLabel:
@@ -211,7 +201,6 @@
                 id: analogous_grid
 
                 ColorBox:
-
                 ColorBox:
 
 
@@ -225,7 +214,7 @@
             width: self.minimum_width
             height: self.minimum_height
             spacing: '25dp'
-            padding: '25dp', '25dp'
+            padding: '25dp'
 
             StackableRow:
                 spacing: '25dp'
@@ -233,7 +222,6 @@
                 ColorSelectBox:
                     id: color_select1
                     width: '75dp'
-
                 ColorSelectBox:
                     id: color_select2
                     width: '75dp'

@@ -1,7 +1,3 @@
-#:import App kivy.app
-#:import Factory kivy.factory.Factory
-
-
 <PalettesScreen>:
     knsname: 'palettes_screen'
     orientation: 'vertical'
@@ -18,17 +14,7 @@
             id: action_view
             ActionPrevious:
                 id: action_previous
-                on_release:
-                    if root.mode == 'normal': \
-                    Factory.ScreenMenu().open()
-                    elif root.mode == 'add': \
-                    App.get_running_app().root.current = 'lookup'; \
-                    root.mode = 'normal'
-                    elif root.mode == 'selection': \
-                    palette_stack.clear_selection(); \
-                    action_view.remove_widget(root.delete_button); \
-                    action_view.add_widget(root.new_button); \
-                    root.mode = 'normal'
+                on_release: root.on_action_previous()
             ActionButton:
                 id: new_button
                 text: 'New'
@@ -55,13 +41,7 @@
             id: action_view
             ActionPrevious:
                 id: action_previous
-                on_release:
-                    if root.mode == 'normal': \
-                    App.get_running_app().root.current = 'palettes'
-                    elif root.mode == 'selection': \
-                    color_stack.clear_selection(); \
-                    action_view.remove_widget(root.delete_button); \
-                    root.mode = 'normal'
+                on_release: root.on_action_previous()
 
     ScrollView:
         SelectableStack:

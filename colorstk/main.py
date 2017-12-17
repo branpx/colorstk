@@ -8,9 +8,7 @@ from kivy.properties import (BooleanProperty,
 from kivy.uix.behaviors.knspace import knspace
 from kivy.uix.boxlayout import BoxLayout
 from kivy.uix.modalview import ModalView
-from kivy.uix.screenmanager import (NoTransition,
-                                    Screen,
-                                    ScreenManager)
+from kivy.uix.screenmanager import NoTransition, ScreenManager
 from kivy.uix.settings import SettingItem, SettingsWithNoMenu
 from kivy.uix.togglebutton import ToggleButton
 
@@ -133,7 +131,7 @@ class ColorsTKApp(App):
              'section': 'color',
              'key': 'scheme_mode',
              'options': ['RGB', 'RYB']}
-            ])
+        ])
         settings.add_json_panel('Settings', self.config, data=json_panel)
         self.settings_popup = PopupWithActionBar(title='Settings')
         self.settings_popup.add_widget(settings)

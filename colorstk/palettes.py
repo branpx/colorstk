@@ -4,7 +4,6 @@ from kivy.factory import Factory
 from kivy.lang.builder import Builder
 from kivy.properties import (BooleanProperty,
                              ListProperty,
-                             ObjectProperty,
                              StringProperty)
 from kivy.storage.jsonstore import JsonStore
 from kivy.uix.actionbar import ActionButton
@@ -12,7 +11,6 @@ from kivy.uix.behaviors.compoundselection import CompoundSelectionBehavior
 from kivy.uix.behaviors.knspace import knspace, KNSpaceBehavior
 from kivy.uix.boxlayout import BoxLayout
 from kivy.uix.gridlayout import GridLayout
-from kivy.uix.label import Label
 from kivy.uix.popup import Popup
 from kivy.uix.screenmanager import Screen
 from kivy.uix.stacklayout import StackLayout
@@ -51,6 +49,18 @@ class PalettesScreen(KNSpaceBehavior, BoxLayout, Screen):
             action_view.remove_widget(self.new_button)
             action_view.add_widget(self.delete_button)
 
+    def on_action_previous(self):
+        if self.mode == 'normal':
+            Factory.ScreenMenu().open()
+        elif self.mode == 'add':
+            App.get_running_app().root.current = 'lookup'
+            self.mode = 'normal'
+        elif self.mode == 'selection':
+            self.ids.palette_stack.clear_selection()
+            self.ids.action_view.remove_widget(self.delete_button)
+            self.ids.action_view.add_widget(self.new_button)
+            self.mode = 'normal'
+
     def delete_palette(self, button=None):
         for palette in self.ids.palette_stack.selected_nodes:
             self.ids.palette_stack.remove_widget(palette)
@@ -70,10 +80,9 @@ class ColorsScreen(KNSpaceBehavior, BoxLayout, Screen):
         self.delete_button = ActionButton(
             text='Delete', on_release=self.delete_color)
 
-    def load_colors(self, palette):
-        self.palette = palette
-        for color in palette.colors:
-            self.ids.color_stack.add_widget(PaletteColor(color=color))
+    def on_leave(self):
+        self.palette = None
+        self.ids.color_stack.clear_widgets()
 
     def on_mode(self, instance, mode):
         action_previous = self.ids.action_previous
@@ -84,9 +93,18 @@ class ColorsScreen(KNSpaceBehavior, BoxLayout, Screen):
             action_previous.title = 'Selection'
             action_view.add_widget(self.delete_button)
 
-    def on_leave(self):
-        self.palette = None
-        self.ids.color_stack.clear_widgets()
+    def on_action_previous(self):
+        if self.mode == 'normal':
+            App.get_running_app().root.current = 'palettes'
+        elif self.mode == 'selection':
+            self.ids.color_stack.clear_selection()
+            self.ids.action_view.remove_widget(self.delete_button)
+            self.mode = 'normal'
+
+    def load_colors(self, palette):
+        self.palette = palette
+        for color in palette.colors:
+            self.ids.color_stack.add_widget(PaletteColor(color=color))
 
     def delete_color(self, button=None):
         color_stack = self.ids.color_stack

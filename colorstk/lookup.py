@@ -26,6 +26,8 @@ Builder.load_file('lookup.kv')
 
 
 class LookupScreen(KNSpaceBehavior, BoxLayout, Screen):
+    named_colors = {value: name for name, value in
+                    grapefruit.NAMED_COLOR.items()}
     color = ObjectProperty()
     color_name = StringProperty()
     websafe_color = ObjectProperty()
@@ -36,8 +38,6 @@ class LookupScreen(KNSpaceBehavior, BoxLayout, Screen):
     scheme_mode = StringProperty()
     color_spaces = ListProperty()
     detach_values = BooleanProperty()
-    named_colors = {value: name for name, value in
-                    grapefruit.NAMED_COLOR.items()}
 
     def __init__(self, **kwargs):
         config = App.get_running_app().config
@@ -69,47 +69,6 @@ class LookupScreen(KNSpaceBehavior, BoxLayout, Screen):
             value_display.update_inputs()
         self.set_color_info()
         self.make_schemes()
-
-    def on_color_spaces(self, instance, color_spaces):
-        self.value_view.ids.value_grid.clear_widgets()
-        self.load_value_displays()
-
-    def load_value_displays(self):
-        for color_space in self.color_spaces:
-            self.value_view.ids.value_grid.add_widget(
-                ValueDisplay(color_space))
-
-    def on_detach_values(self, instance, detach_values):
-        self.tabbed_panel.clear_widgets()
-        self.tabbed_panel.clear_tabs()
-        self.ids.content.clear_widgets()
-        self.load_content()
-
-    def load_content(self):
-        if not self.detach_values:
-            self.value_view.background_color[3] = 0
-            values_tab = TabbedPanelItem(
-                text='Values', content=self.value_view)
-            self.tabbed_panel.add_widget(values_tab)
-            self.tabbed_panel.switch_to(values_tab)
-        self.tabbed_panel.add_widget(self.info_tab)
-        self.tabbed_panel.add_widget(self.schemes_tab)
-        self.tabbed_panel.add_widget(self.tools_tab)
-        if self.detach_values:
-            self.value_view.background_color[3] = 1
-            self.ids.content.add_widget(self.value_view)
-            self.tabbed_panel.switch_to(self.info_tab)
-        self.ids.content.add_widget(self.tabbed_panel)
-
-    def set_color(self, value):
-        self.color = grapefruit.Color(tuple(value), wref=self.white_point)
-
-    def set_white_point(self, name, observer):
-        if observer == 'CIE 1931':
-            name = 'std_' + name
-        elif observer == 'CIE 1964':
-            name = 'sup_' + name
-        self.white_point = grapefruit.WHITE_REFERENCE[name]
 
     def get_value(self, color_space):
             if color_space == 'Hex':
@@ -159,6 +118,47 @@ class LookupScreen(KNSpaceBehavior, BoxLayout, Screen):
                 self.schemes_tab.ids.analogous_grid.children,
                 self.color.make_analogous_scheme(mode=self.scheme_mode)):
             color_box.color = color
+
+    def on_color_spaces(self, instance, color_spaces):
+        self.value_view.ids.value_grid.clear_widgets()
+        self.load_value_displays()
+
+    def load_value_displays(self):
+        for color_space in self.color_spaces:
+            self.value_view.ids.value_grid.add_widget(
+                ValueDisplay(color_space))
+
+    def on_detach_values(self, instance, detach_values):
+        self.tabbed_panel.clear_widgets()
+        self.tabbed_panel.clear_tabs()
+        self.ids.content.clear_widgets()
+        self.load_content()
+
+    def load_content(self):
+        if not self.detach_values:
+            self.value_view.background_color[3] = 0
+            values_tab = TabbedPanelItem(
+                text='Values', content=self.value_view)
+            self.tabbed_panel.add_widget(values_tab)
+            self.tabbed_panel.switch_to(values_tab)
+        self.tabbed_panel.add_widget(self.info_tab)
+        self.tabbed_panel.add_widget(self.schemes_tab)
+        self.tabbed_panel.add_widget(self.tools_tab)
+        if self.detach_values:
+            self.value_view.background_color[3] = 1
+            self.ids.content.add_widget(self.value_view)
+            self.tabbed_panel.switch_to(self.info_tab)
+        self.ids.content.add_widget(self.tabbed_panel)
+
+    def set_color(self, value):
+        self.color = grapefruit.Color(tuple(value), wref=self.white_point)
+
+    def set_white_point(self, name, observer):
+        if observer == 'CIE 1931':
+            name = 'std_' + name
+        elif observer == 'CIE 1964':
+            name = 'sup_' + name
+        self.white_point = grapefruit.WHITE_REFERENCE[name]
 
     def random_color(self):
         self.add_to_history(self.color)
@@ -260,10 +260,11 @@ class ValueDisplay(GridLayout):
                 *self.value, wref=white_point)
         if lookup_screen.color.is_legal:
             del lookup_screen.history_next[:]
-            lookup_screen.ids.next_button.disabled = True
         else:
             lookup_screen.previous_color()
             lookup_screen.history_next.pop()
+        if not lookup_screen.history_next:
+            lookup_screen.ids.next_button.disabled = True
 
 
 class ValueInput(TextInput):
@@ -281,7 +282,7 @@ class ValueInput(TextInput):
         if not focused:
             if (self.text and self.text != self.format_value(
                     self.parent.value[self.index]) and self.valid_input()):
-                self.parent.value[self.index] = self.constrain_value()
+                self.parent.value[self.index] = self.value
                 self.parent.update_color()
             else:
                 self.text = self.format_value(self.parent.value[self.index])
@@ -314,7 +315,8 @@ class ValueInput(TextInput):
                 return False
         return True
 
-    def constrain_value(self):
+    @property
+    def value(self):
         try:
             value = float(self.text)
         except ValueError:
