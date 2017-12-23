@@ -81,6 +81,8 @@
 
         PalettePreviewColor:
             pos_hint: {'center_x': 0.70, 'center_y': 0.70}
+            # Set the preview if a color exists at the index,
+            # otherwise make the preview appear empty.
             color: root.colors[2] if len(root.colors) > 2 else (0.1, 0.1, 0.1)
         PalettePreviewColor:
             pos_hint: {'center_x': 0.5, 'center_y': 0.5}

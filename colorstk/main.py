@@ -1,3 +1,5 @@
+#!/usr/bin/env python
+
 import json
 
 from kivy.app import App
@@ -17,14 +19,20 @@ import palettes
 
 
 class PopupWithActionBar(BoxLayout, ModalView):
+    """A `Popup` with an action bar at the top."""
+
     title = StringProperty()
 
 
 class AboutPopup(PopupWithActionBar):
+    """A `PopupWithActionBar` showing license information."""
+
     pass
 
 
 class OptionsTogglePopup(PopupWithActionBar):
+    """A `PopupWithActionBar` for toggling options."""
+
     setting_item = ObjectProperty()
 
     def on_dismiss(self):
@@ -32,6 +40,8 @@ class OptionsTogglePopup(PopupWithActionBar):
 
 
 class SettingOptionsToggle(SettingItem):
+    """A `SettingItem` that allows toggling options from a list."""
+
     temp_value = ObjectProperty()
     options = ListProperty()
     multi_toggle = BooleanProperty(False)
@@ -44,12 +54,19 @@ class SettingOptionsToggle(SettingItem):
         self.create_popup()
 
     def set_option(self, toggle_button):
+        """Sets a temporary value for the toggled option.
+
+        Args:
+            toggle_button: The `ToggleButton` that was toggled.
+
+        """
         if self.multi_toggle:
             value_list = json.loads(self.temp_value)
             if toggle_button.state == 'down':
                 value_list.append(toggle_button.text)
             elif toggle_button.state == 'normal':
                 value_list.remove(toggle_button.text)
+            # Preserve the order of the options.
             value_list = [option for option in self.options
                           if option in value_list]
             self.temp_value = json.dumps(value_list)
@@ -61,6 +78,7 @@ class SettingOptionsToggle(SettingItem):
         self.value = self.temp_value
 
     def create_popup(self):
+        """Creates an `OptionsTogglePopup` and adds toggle buttons."""
         self.popup = OptionsTogglePopup(title=self.title, setting_item=self)
         for option in self.options:
             state = 'down' if option in self.value else 'normal'
@@ -75,6 +93,7 @@ class SettingOptionsToggle(SettingItem):
 
 class ColorsTKApp(App):
     def build(self):
+        """Returns a `ScreenManager` as the root widget."""
         self.use_kivy_settings = False
         self.settings_cls = SettingsWithNoMenu
         screen_manager = ScreenManager(transition=NoTransition())
@@ -84,6 +103,7 @@ class ColorsTKApp(App):
         return screen_manager
 
     def build_config(self, config):
+        """Sets default values in the configuration."""
         config.setdefaults('ui', {
             'detach_values': 0,
             'color_spaces': json.dumps(
@@ -96,6 +116,7 @@ class ColorsTKApp(App):
         })
 
     def build_settings(self, settings):
+        """Adds the settings panel and creates the settings popup."""
         settings.register_type('options_toggle', SettingOptionsToggle)
         json_panel = json.dumps([
             {'type': 'bool',
@@ -133,6 +154,7 @@ class ColorsTKApp(App):
              'options': ['RGB', 'RYB']}
         ])
         settings.add_json_panel('Settings', self.config, data=json_panel)
+
         self.settings_popup = PopupWithActionBar(title='Settings')
         self.settings_popup.add_widget(settings)
 
@@ -140,6 +162,7 @@ class ColorsTKApp(App):
         self.settings_popup.open()
 
     def on_config_change(self, config, section, key, value):
+        """Sets the property for the corresponding config value."""
         lookup_screen = knspace.lookup_screen
         if key == 'detach_values':
             lookup_screen.detach_values = int(value)

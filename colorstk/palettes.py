@@ -1,3 +1,5 @@
+"""Implements saving and loading colors."""
+
 from kivy.app import App
 from kivy.clock import Clock
 from kivy.factory import Factory
@@ -21,20 +23,24 @@ Builder.load_file('palettes.kv')
 
 
 class PalettesScreen(KNSpaceBehavior, BoxLayout, Screen):
+    """A screen for creating and displaying color palettes."""
     mode = StringProperty()
 
     def __init__(self, **kwargs):
+        """Initializes a `PalettesScreen` and loads saved palettes."""
         super(PalettesScreen, self).__init__(**kwargs)
         self.mode = 'normal'
         self.new_button = self.ids.new_button
         self.delete_button = ActionButton(
             text='Delete', on_release=self.delete_palette)
         self.palettes = JsonStore('palettes.json')
+
         for palette in self.palettes:
             self.ids.palette_stack.add_widget(Palette(
                 name=palette, colors=self.palettes[palette]['colors']))
 
     def on_mode(self, instance, mode):
+        """Sets the action bar properties to match the mode."""
         action_previous = self.ids.action_previous
         action_view = self.ids.action_view
         if mode == 'normal':
@@ -50,6 +56,7 @@ class PalettesScreen(KNSpaceBehavior, BoxLayout, Screen):
             action_view.add_widget(self.delete_button)
 
     def on_action_previous(self):
+        """Chooses previous button behavior based on the mode."""
         if self.mode == 'normal':
             Factory.ScreenMenu().open()
         elif self.mode == 'add':
@@ -62,6 +69,7 @@ class PalettesScreen(KNSpaceBehavior, BoxLayout, Screen):
             self.mode = 'normal'
 
     def delete_palette(self, button=None):
+        """Removes and deletes a `Palettes` and its colors."""
         for palette in self.ids.palette_stack.selected_nodes:
             self.ids.palette_stack.remove_widget(palette)
             self.palettes.delete(palette.name)
@@ -72,6 +80,7 @@ class PalettesScreen(KNSpaceBehavior, BoxLayout, Screen):
 
 
 class ColorsScreen(KNSpaceBehavior, BoxLayout, Screen):
+    """A `Screen` for displaying the colors in a `Palette`."""
     mode = StringProperty()
 
     def __init__(self, **kwargs):
@@ -85,6 +94,7 @@ class ColorsScreen(KNSpaceBehavior, BoxLayout, Screen):
         self.ids.color_stack.clear_widgets()
 
     def on_mode(self, instance, mode):
+        """Sets the action bar properties to match the mode."""
         action_previous = self.ids.action_previous
         action_view = self.ids.action_view
         if mode == 'normal':
@@ -94,6 +104,7 @@ class ColorsScreen(KNSpaceBehavior, BoxLayout, Screen):
             action_view.add_widget(self.delete_button)
 
     def on_action_previous(self):
+        """Chooses previous button behavior based on the mode."""
         if self.mode == 'normal':
             App.get_running_app().root.current = 'palettes'
         elif self.mode == 'selection':
@@ -102,11 +113,18 @@ class ColorsScreen(KNSpaceBehavior, BoxLayout, Screen):
             self.mode = 'normal'
 
     def load_colors(self, palette):
+        """Loads the colors from a `Palette` to the screen.
+
+        Args:
+            palette: A `Palette` to load colors from.
+
+        """
         self.palette = palette
         for color in palette.colors:
             self.ids.color_stack.add_widget(PaletteColor(color=color))
 
     def delete_color(self, button=None):
+        """Deletes a color from its palette and removes it."""
         color_stack = self.ids.color_stack
         for color_widget in color_stack.selected_nodes:
             color_stack.remove_widget(color_widget)
@@ -117,6 +135,8 @@ class ColorsScreen(KNSpaceBehavior, BoxLayout, Screen):
 
 
 class SelectableStack(CompoundSelectionBehavior, StackLayout):
+    """A `StackLayout` that allows selecting its children."""
+
     def select_node(self, node):
         node.selected = True
         return super(SelectableStack, self).select_node(node)
@@ -127,24 +147,31 @@ class SelectableStack(CompoundSelectionBehavior, StackLayout):
 
 
 class Palette(GridLayout):
+    """Stores colors and displays a preview of them."""
+
     name = StringProperty()
     colors = ListProperty()
     selected = BooleanProperty(False)
 
     def on_touch_down(self, touch):
+        """Selects `self` if in selection mode."""
         if self.collide_point(*touch.pos):
             touch.grab(self)
+
             if knspace.palettes_screen.mode == 'normal':
                 clock_event = Clock.schedule_once(self.trigger_selection, 1)
                 touch.ud['trigger_selection'] = clock_event
+
             elif knspace.palettes_screen.mode == 'selection':
                 self.parent.select_with_touch(self, touch)
 
     def on_touch_move(self, touch):
+        """Unschedules the clock event if the touch moved outside."""
         if touch.grab_current is self and not self.collide_point(*touch.pos):
             Clock.unschedule(touch.ud.get('trigger_selection'))
 
     def on_touch_up(self, touch):
+        """Adds color if in add mode, otherwise loads the colors."""
         Clock.unschedule(touch.ud.get('trigger_selection'))
         if touch.grab_current is self and self.collide_point(*touch.pos):
             if knspace.palettes_screen.mode == 'normal':
@@ -160,21 +187,26 @@ class Palette(GridLayout):
         knspace.palettes_screen.palettes.put(self.name, colors=colors)
 
     def on_selected(self, instance, selected):
+        """Changes appearance based on selection status."""
         if selected:
             self.background_color = (0.4, 0.4, 0.4, 1)
         else:
             self.background_color = (0.2, 0.2, 0.2, 1)
 
     def trigger_selection(self, dt):
+        """Triggers the `PalettesScreen` selection mode."""
         knspace.palettes_screen.mode = 'selection'
         self.parent.select_with_touch(self)
 
 
 class PaletteColor(Widget):
+    """Represents a color in a `Palette`."""
+
     color = ListProperty()
     selected = BooleanProperty(False)
 
     def on_touch_down(self, touch):
+        """Selects `self` if in selection mode."""
         if self.collide_point(*touch.pos):
             touch.grab(self)
             if knspace.colors_screen.mode == 'normal':
@@ -184,10 +216,12 @@ class PaletteColor(Widget):
                 self.parent.select_with_touch(self, touch)
 
     def on_touch_move(self, touch):
+        """Unschedules the clock event if the touch moved outside."""
         if touch.grab_current is self and not self.collide_point(*touch.pos):
             Clock.unschedule(touch.ud.get('trigger_selection'))
 
     def on_touch_up(self, touch):
+        """Switches to the color if in normal mode."""
         Clock.unschedule(touch.ud.get('trigger_selection'))
         if touch.grab_current is self and self.collide_point(*touch.pos):
             if knspace.colors_screen.mode == 'normal':
@@ -197,23 +231,29 @@ class PaletteColor(Widget):
         touch.ungrab(self)
 
     def on_selected(self, instance, selected):
+        """Changes appearance based on selection status."""
         if selected:
             self.border_color = (0.8, 0.8, 0.8, 1)
         else:
             self.border_color = (0.3, 0.3, 0.3, 1)
 
     def trigger_selection(self, dt):
+        """Triggers the `ColorsScreen` selection mode."""
         knspace.colors_screen.mode = 'selection'
         self.parent.select_with_touch(self)
 
 
 class NewPalettePopup(Popup):
+    """A `Popup` that allows creating a new `Palette` with a name."""
+
     def on_open(self):
+        """Generates a default text for the name input."""
         default_name = 'palette' + str(len(knspace.palettes_screen.palettes)+1)
         self.ids.name_input.text = default_name
         self.ids.name_input.focus = True
 
     def add_palette(self, name_input):
+        """Creates and adds a new `Palette` to the `PalettesScreen`."""
         if name_input.text not in knspace.palettes_screen.palettes:
             knspace.palettes_screen.palettes.put(
                 name_input.text, colors=[])
