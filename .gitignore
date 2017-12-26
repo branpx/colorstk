@@ -1,8 +1,6 @@
-bin
-.buildozer
-buildozer.spec
-*.json
-*.ini
+bin/
+.buildozer/
+*.egg-info/
 *.pyc
 *.pyo
 *.swp

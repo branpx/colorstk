@@ -1,8 +1,10 @@
 #!/usr/bin/env python
 
 import json
+from os.path import dirname, join
 
 from kivy.app import App
+from kivy.lang.builder import Builder
 from kivy.properties import (BooleanProperty,
                              ListProperty,
                              ObjectProperty,
@@ -14,8 +16,7 @@ from kivy.uix.screenmanager import NoTransition, ScreenManager
 from kivy.uix.settings import SettingItem, SettingsWithNoMenu
 from kivy.uix.togglebutton import ToggleButton
 
-import lookup
-import palettes
+from colorstk import lookup, palettes
 
 
 class PopupWithActionBar(BoxLayout, ModalView):
@@ -93,9 +94,13 @@ class SettingOptionsToggle(SettingItem):
 
 class ColorsTKApp(App):
     def build(self):
-        """Returns a `ScreenManager` as the root widget."""
+        """Initializes `ColorsTKApp`."""
         self.use_kivy_settings = False
         self.settings_cls = SettingsWithNoMenu
+        pkg_dir = dirname(__file__)
+        Builder.load_file(join(pkg_dir, 'main.kv'))
+        Builder.load_file(join(pkg_dir, 'lookup.kv'))
+        Builder.load_file(join(pkg_dir, 'palettes.kv'))
         screen_manager = ScreenManager(transition=NoTransition())
         screen_manager.add_widget(lookup.LookupScreen(name='lookup'))
         screen_manager.add_widget(palettes.PalettesScreen(name='palettes'))
@@ -177,8 +182,15 @@ class ColorsTKApp(App):
         elif key == 'scheme_mode':
             lookup_screen.scheme_mode = value.lower()
 
+    def get_application_config(self):
+        """Returns the path to the application configuration file."""
+        config_path = join(self.user_data_dir, '%(appname)s.ini')
+        return super(ColorsTKApp, self).get_application_config(config_path)
+
+
+def main():
+    ColorsTKApp().run()
+
 
 if __name__ == '__main__':
-    app = ColorsTKApp()
-    app.load_kv('main.kv')
-    app.run()
+    main()

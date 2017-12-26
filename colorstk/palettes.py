@@ -1,9 +1,10 @@
 """Implements saving and loading colors."""
 
+from os.path import join
+
 from kivy.app import App
 from kivy.clock import Clock
 from kivy.factory import Factory
-from kivy.lang.builder import Builder
 from kivy.properties import (BooleanProperty,
                              ListProperty,
                              StringProperty)
@@ -19,9 +20,6 @@ from kivy.uix.stacklayout import StackLayout
 from kivy.uix.widget import Widget
 
 
-Builder.load_file('palettes.kv')
-
-
 class PalettesScreen(KNSpaceBehavior, BoxLayout, Screen):
     """A screen for creating and displaying color palettes."""
     mode = StringProperty()
@@ -33,7 +31,8 @@ class PalettesScreen(KNSpaceBehavior, BoxLayout, Screen):
         self.new_button = self.ids.new_button
         self.delete_button = ActionButton(
             text='Delete', on_release=self.delete_palette)
-        self.palettes = JsonStore('palettes.json')
+        user_data_dir = App.get_running_app().user_data_dir
+        self.palettes = JsonStore(join(user_data_dir, 'palettes.json'))
 
         for palette in self.palettes:
             self.ids.palette_stack.add_widget(Palette(

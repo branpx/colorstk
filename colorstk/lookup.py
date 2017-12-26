@@ -9,7 +9,6 @@ import grapefruit
 from kivy.app import App
 from kivy.clock import Clock
 from kivy.factory import Factory
-from kivy.lang.builder import Builder
 from kivy.properties import (BooleanProperty,
                              ListProperty,
                              NumericProperty,
@@ -22,9 +21,6 @@ from kivy.uix.screenmanager import Screen
 from kivy.uix.tabbedpanel import TabbedPanel, TabbedPanelItem
 from kivy.uix.textinput import TextInput
 from kivy.uix.widget import Widget
-
-
-Builder.load_file('lookup.kv')
 
 
 class LookupScreen(KNSpaceBehavior, BoxLayout, Screen):
