@@ -13,7 +13,7 @@ package.domain = org.colorstk
 source.dir = ./colorstk
 
 # (list) Source files to include (let empty to include all the files)
-source.include_exts = py,png,jpg,kv,atlas
+source.include_exts = py,png,jpg,kv,atlas,ttf,fontd
 
 # (list) List of inclusions using pattern matching
 #source.include_patterns = assets/*,images/*.png
@@ -36,14 +36,15 @@ version = 0.1
 
 # (list) Application requirements
 # comma seperated e.g. requirements = sqlite3,kivy
-requirements = python3crystax==3.6,kivy,git+https://github.com/xav/grapefruit.git
+#requirements = python3crystax==3.6,kivy,git+https://github.com/xav/grapefruit.git
+requirements = kivy,git+https://github.com/xav/grapefruit.git
 
 # (str) Custom source folders for requirements
 # Sets custom source for any requirements with recipes
 # requirements.source.kivy = ../../kivy
 
 # (list) Garden requirements
-#garden_requirements =
+garden_requirements = iconfonts
 
 # (str) Presplash of the application
 #presplash.filename = %(source.dir)s/data/presplash.png
@@ -103,7 +104,7 @@ fullscreen = 0
 #android.private_storage = True
 
 # (str) Android NDK directory (if empty, it will be automatically downloaded.)
-android.ndk_path = ~/.buildozer/android/platform/crystax-ndk-10.3.2
+#android.ndk_path = ~/.buildozer/android/platform/crystax-ndk-10.3.2
 
 # (str) Android SDK directory (if empty, it will be automatically downloaded.)
 #android.sdk_path =

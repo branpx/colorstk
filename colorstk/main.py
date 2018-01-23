@@ -4,6 +4,7 @@ import json
 from os.path import dirname, join
 
 from kivy.app import App
+from kivy.garden import iconfonts
 from kivy.lang.builder import Builder
 from kivy.properties import (BooleanProperty,
                              ListProperty,
@@ -16,13 +17,17 @@ from kivy.uix.screenmanager import NoTransition, ScreenManager
 from kivy.uix.settings import SettingItem, SettingsWithNoMenu
 from kivy.uix.togglebutton import ToggleButton
 
-from colorstk import lookup, palettes
+try:
+    import lookup, palettes
+except ImportError:
+    from colorstk import lookup, palettes
 
 
 class PopupWithActionBar(BoxLayout, ModalView):
     """A `Popup` with an action bar at the top."""
 
     title = StringProperty()
+    icon = StringProperty()
 
 
 class AboutPopup(PopupWithActionBar):
@@ -97,10 +102,17 @@ class ColorsTKApp(App):
         """Initializes `ColorsTKApp`."""
         self.use_kivy_settings = False
         self.settings_cls = SettingsWithNoMenu
-        pkg_dir = dirname(__file__)
-        Builder.load_file(join(pkg_dir, 'main.kv'))
-        Builder.load_file(join(pkg_dir, 'lookup.kv'))
-        Builder.load_file(join(pkg_dir, 'palettes.kv'))
+        self.title = 'Colors Toolkit'
+        self.icon = 'media/colorstk_icon.png'
+        self.pkg_dir = dirname(__file__)
+
+        iconfonts.register('colorstk',
+                           join(self.pkg_dir, 'data/icons'),
+                           join(self.pkg_dir, 'data/icons.fontd'))
+        Builder.load_file(join(self.pkg_dir, 'main.kv'))
+        Builder.load_file(join(self.pkg_dir, 'lookup.kv'))
+        Builder.load_file(join(self.pkg_dir, 'palettes.kv'))
+
         screen_manager = ScreenManager(transition=NoTransition())
         screen_manager.add_widget(lookup.LookupScreen(name='lookup'))
         screen_manager.add_widget(palettes.PalettesScreen(name='palettes'))
@@ -160,7 +172,8 @@ class ColorsTKApp(App):
         ])
         settings.add_json_panel('Settings', self.config, data=json_panel)
 
-        self.settings_popup = PopupWithActionBar(title='Settings')
+        self.settings_popup = PopupWithActionBar(
+            title='Settings', icon=join(self.pkg_dir, 'data/settings.png'))
         self.settings_popup.add_widget(settings)
 
     def display_settings(self, settings):

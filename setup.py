@@ -9,8 +9,9 @@ setup(
     url='http://github.com/branpx/colorstk',
     license='MIT',
     packages=['colorstk'],
-    package_data={'colorstk': ['*.kv']},
-    install_requires=['grapefruit'],
+    package_data={'colorstk': ['data/*', '*.kv']},
+    exclude_package_data={'colorstk': ['data/svg/*']},
+    install_requires=['kivy', 'grapefruit'],
     dependency_links=['git+http://github.com/xav/grapefruit.git'],
     entry_points={'gui_scripts': ['colorstk=colorstk.main:main']}
     )

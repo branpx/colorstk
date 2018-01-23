@@ -5,20 +5,29 @@
     ActionBar:
         ActionView:
             ActionPrevious:
-                title: 'Lookup'
+                title: '    Lookup'
+                app_icon: join(pkg_dir, 'data/menu.png')
+                app_icon_width: '20dp'
+                app_icon_height: '20dp'
                 with_previous: False
                 on_release: Factory.ScreenMenu().open()
             ActionButton:
-                text: 'Add to palette'
+                text: '%s' % icon('icon_add_color')
+                font_size: '24dp'
+                markup: True
                 on_release: root.add_to_palette()
             ActionButton:
                 id: prev_button
-                text: 'Prev'
+                text: '%s' % icon('icon_prev')
+                font_size: '24dp'
+                markup: True
                 disabled: True
                 on_release: root.previous_color()
             ActionButton:
                 id: next_button
-                text: 'Next'
+                text: '%s' % icon('icon_next')
+                font_size: '24dp'
+                markup: True
                 disabled: True
                 on_release: root.next_color()
 
@@ -77,7 +86,7 @@
     write_tab: False
 
 
-<TabbedPanel>:
+<FullWidthTabbedPanel>:
     background_color: 0.2, 0.2, 0.2, 1
     background_image: ''
     do_default_tab: False

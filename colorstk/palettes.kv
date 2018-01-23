@@ -14,10 +14,15 @@
             id: action_view
             ActionPrevious:
                 id: action_previous
+                app_icon: join(pkg_dir, 'data/menu.png')
+                app_icon_width: '20dp'
+                app_icon_height: '20dp'
                 on_release: root.on_action_previous()
             ActionButton:
                 id: new_button
-                text: 'New'
+                text: '%s' % icon('icon_add')
+                font_size: '20dp'
+                markup: True
                 on_release: Factory.NewPalettePopup().open()
 
     ScrollView:
@@ -41,6 +46,9 @@
             id: action_view
             ActionPrevious:
                 id: action_previous
+                app_icon: join(pkg_dir, 'data/palette.png')
+                app_icon_width: '32dp'
+                app_icon_height: '32dp'
                 on_release: root.on_action_previous()
 
     ScrollView:

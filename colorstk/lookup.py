@@ -58,7 +58,7 @@ class LookupScreen(KNSpaceBehavior, BoxLayout, Screen):
         super(LookupScreen, self).__init__(**kwargs)
 
         self.value_view = Factory.ValueView()
-        self.tabbed_panel = TabbedPanel()
+        self.tabbed_panel = FullWidthTabbedPanel()
         self.info_tab = Factory.InfoTab()
         self.schemes_tab = Factory.SchemesTab()
         self.tools_tab = Factory.ToolsTab()
@@ -462,6 +462,30 @@ class ValueInput(TextInput):
             return val
         formatter = '{:.' + str(digits) + 'g}'
         return formatter.format(round(val, digits) + 0)
+
+
+class FullWidthTabbedPanel(TabbedPanel):
+    """A `TabbedPanel` with tab headers filling the tab strip width."""
+
+    tab_width_min = NumericProperty('75dp')
+
+    def on_width(self, instance, width):
+        self.set_tab_width()
+
+    def on_tab_list(self, instance, tab_list):
+        self.set_tab_width()
+
+    def set_tab_width(self):
+        """Sets the width of the tab headers to fill the tab strip."""
+        try:
+            new_tab_width = self.width / len(self.tab_list)
+        except ZeroDivisionError:
+            new_tab_width = self.width
+
+        if new_tab_width >= self.tab_width_min:
+            self.tab_width = new_tab_width
+        else:
+            self.tab_width = self.tab_width_min
 
 
 class ColorBox(Widget):

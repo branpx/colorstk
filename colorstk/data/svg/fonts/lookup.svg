@@ -1,0 +1,142 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:xlink="http://www.w3.org/1999/xlink"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   id="svg8"
+   version="1.1"
+   viewBox="0 0 8.4666667 8.4666667"
+   height="32"
+   width="32"
+   sodipodi:docname="lookup.svg"
+   inkscape:version="0.92.2 5c3e80d, 2017-08-06"
+   inkscape:export-xdpi="95.999802"
+   inkscape:export-ydpi="95.999802">
+  <sodipodi:namedview
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1"
+     objecttolerance="10"
+     gridtolerance="10"
+     guidetolerance="10"
+     inkscape:pageopacity="0"
+     inkscape:pageshadow="2"
+     inkscape:window-width="1366"
+     inkscape:window-height="749"
+     id="namedview1734"
+     showgrid="false"
+     inkscape:pagecheckerboard="true"
+     inkscape:zoom="13.609375"
+     inkscape:cx="4.597549"
+     inkscape:cy="20.49532"
+     inkscape:window-x="0"
+     inkscape:window-y="19"
+     inkscape:window-maximized="0"
+     inkscape:current-layer="svg8" />
+  <defs
+     id="defs2">
+    <linearGradient
+       id="linearGradient1055">
+      <stop
+         id="stop1051"
+         offset="0"
+         style="stop-color:#9d5e3b;stop-opacity:1" />
+      <stop
+         id="stop1053"
+         offset="1"
+         style="stop-color:#e9b287;stop-opacity:1" />
+    </linearGradient>
+    <linearGradient
+       id="linearGradient852">
+      <stop
+         id="stop848"
+         offset="0"
+         style="stop-color:#ffffff;stop-opacity:0.29411766" />
+      <stop
+         id="stop850"
+         offset="1"
+         style="stop-color:#000000;stop-opacity:0.29411766" />
+    </linearGradient>
+    <linearGradient
+       id="linearGradient859">
+      <stop
+         id="stop855"
+         offset="0"
+         style="stop-color:#c87137;stop-opacity:1" />
+      <stop
+         id="stop857"
+         offset="1"
+         style="stop-color:#e9c6af;stop-opacity:1" />
+    </linearGradient>
+    <linearGradient
+       gradientTransform="matrix(0.99131101,0,0,0.99123139,0.03678282,-285.96561)"
+       gradientUnits="userSpaceOnUse"
+       y2="288.84348"
+       x2="8.2608957"
+       y1="296.89911"
+       x1="0.25301754"
+       id="linearGradient861"
+       xlink:href="#linearGradient859" />
+    <radialGradient
+       gradientUnits="userSpaceOnUse"
+       gradientTransform="matrix(0.59300737,-0.34234526,0.44444754,0.76974433,-127.03113,-219.87425)"
+       r="2.2990246"
+       fy="290.75308"
+       fx="4.9462008"
+       cy="290.75308"
+       cx="4.9462008"
+       id="radialGradient839"
+       xlink:href="#linearGradient852" />
+    <linearGradient
+       gradientTransform="matrix(0.26228437,0,0,0.2622633,0.03678282,0.03769)"
+       gradientUnits="userSpaceOnUse"
+       y2="1.1721871"
+       x2="31.222284"
+       y1="31.618677"
+       x1="0.95628679"
+       id="linearGradient1057"
+       xlink:href="#linearGradient1055" />
+  </defs>
+  <metadata
+     id="metadata5">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+        <dc:title />
+        <cc:license
+           rdf:resource="http://creativecommons.org/licenses/by/4.0/" />
+        <dc:creator>
+          <cc:Agent>
+            <dc:title>Brandon Piatt</dc:title>
+          </cc:Agent>
+        </dc:creator>
+      </cc:Work>
+      <cc:License
+         rdf:about="http://creativecommons.org/licenses/by/4.0/">
+        <cc:permits
+           rdf:resource="http://creativecommons.org/ns#Reproduction" />
+        <cc:permits
+           rdf:resource="http://creativecommons.org/ns#Distribution" />
+        <cc:requires
+           rdf:resource="http://creativecommons.org/ns#Notice" />
+        <cc:requires
+           rdf:resource="http://creativecommons.org/ns#Attribution" />
+        <cc:permits
+           rdf:resource="http://creativecommons.org/ns#DerivativeWorks" />
+      </cc:License>
+    </rdf:RDF>
+  </metadata>
+  <path
+     style="opacity:1;fill:#000000;fill-opacity:1;stroke:none;stroke-width:3.65164089;stroke-linecap:butt;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;paint-order:normal"
+     d="M 21.923828 0.05859375 C 19.413289 0.097542915 16.926697 1.0622351 15.066406 2.953125 C 11.589265 6.4874713 11.554969 12.04448 14.791016 15.730469 L 11.505859 19.070312 C 10.844899 18.968662 10.138673 19.203126 9.6640625 19.685547 L 0.65039062 28.847656 C -0.074203879 29.584175 -0.19572039 30.817339 0.62109375 31.570312 C 1.4379079 32.323285 2.6992336 32.140815 3.4238281 31.404297 L 12.4375 22.242188 C 12.913654 21.758198 13.12462 21.063944 12.986328 20.429688 L 16.263672 17.099609 C 20.216237 20.093671 25.900658 19.799403 29.394531 16.248047 C 33.115103 12.466252 32.897332 6.373613 28.945312 2.7304688 C 26.969305 0.9088985 24.434368 0.019644585 21.923828 0.05859375 z M 21.960938 2.0585938 C 23.97008 2.0283507 26.007502 2.7388986 27.59375 4.2011719 C 30.766251 7.1257219 30.919271 11.848616 27.970703 14.845703 C 25.022132 17.842786 20.047502 17.924547 16.875 15 C 13.702492 12.075447 13.541656 7.3525559 16.490234 4.3554688 C 17.964522 2.8569309 19.951778 2.0888368 21.960938 2.0585938 z "
+     transform="scale(0.26458333)"
+     id="rect1470" />
+</svg>

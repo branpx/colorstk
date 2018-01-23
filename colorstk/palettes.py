@@ -5,6 +5,7 @@ from os.path import join
 from kivy.app import App
 from kivy.clock import Clock
 from kivy.factory import Factory
+from kivy.garden.iconfonts import icon
 from kivy.properties import (BooleanProperty,
                              ListProperty,
                              StringProperty)
@@ -27,10 +28,13 @@ class PalettesScreen(KNSpaceBehavior, BoxLayout, Screen):
     def __init__(self, **kwargs):
         """Initializes a `PalettesScreen` and loads saved palettes."""
         super(PalettesScreen, self).__init__(**kwargs)
+        self.menu_icon = self.ids.action_previous.app_icon
         self.mode = 'normal'
         self.new_button = self.ids.new_button
         self.delete_button = ActionButton(
-            text='Delete', on_release=self.delete_palette)
+            text='%s'%icon('icon_delete'),
+            font_size='20dp', color=[1, 0, 0, 1],
+            markup=True, on_release=self.delete_palette)
         user_data_dir = App.get_running_app().user_data_dir
         self.palettes = JsonStore(join(user_data_dir, 'palettes.json'))
 
@@ -43,13 +47,16 @@ class PalettesScreen(KNSpaceBehavior, BoxLayout, Screen):
         action_previous = self.ids.action_previous
         action_view = self.ids.action_view
         if mode == 'normal':
-            action_previous.title = 'Palettes'
+            action_previous.title = '   Palettes'
+            action_previous.app_icon = self.menu_icon
             action_previous.with_previous = False
         elif mode == 'add':
             action_previous.title = 'Select palette'
+            action_previous.app_icon = ''
             action_previous.with_previous = True
         elif mode == 'selection':
             action_previous.title = 'Selection'
+            action_previous.app_icon = ''
             action_previous.with_previous = True
             action_view.remove_widget(self.new_button)
             action_view.add_widget(self.delete_button)
@@ -84,9 +91,12 @@ class ColorsScreen(KNSpaceBehavior, BoxLayout, Screen):
 
     def __init__(self, **kwargs):
         super(ColorsScreen, self).__init__(**kwargs)
+        self.menu_icon = self.ids.action_previous.app_icon
         self.mode = 'normal'
         self.delete_button = ActionButton(
-            text='Delete', on_release=self.delete_color)
+            text='%s'%icon('icon_delete'),
+            font_size='20dp', color=[1, 0, 0, 1],
+            markup=True, on_release=self.delete_color)
 
     def on_leave(self):
         self.palette = None
@@ -98,8 +108,10 @@ class ColorsScreen(KNSpaceBehavior, BoxLayout, Screen):
         action_view = self.ids.action_view
         if mode == 'normal':
             action_previous.title = 'Colors'
+            action_previous.app_icon = self.menu_icon
         elif mode == 'selection':
             action_previous.title = 'Selection'
+            action_previous.app_icon = ''
             action_view.add_widget(self.delete_button)
 
     def on_action_previous(self):

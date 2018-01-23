@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   width="32"
+   height="32"
+   viewBox="0 0 8.4666667 8.4666667"
+   version="1.1"
+   id="svg8"
+   inkscape:export-xdpi="95.999817"
+   inkscape:export-ydpi="95.999817"
+   inkscape:version="0.92.2 5c3e80d, 2017-08-06"
+   sodipodi:docname="settings.svg">
+  <defs
+     id="defs2" />
+  <sodipodi:namedview
+     id="base"
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1.0"
+     inkscape:pageopacity="0.0"
+     inkscape:pageshadow="2"
+     inkscape:zoom="7.9195959"
+     inkscape:cx="19.296377"
+     inkscape:cy="21.176509"
+     inkscape:document-units="mm"
+     inkscape:current-layer="g4658"
+     showgrid="false"
+     showborder="true"
+     inkscape:pagecheckerboard="true"
+     units="px"
+     inkscape:window-width="1920"
+     inkscape:window-height="1060"
+     inkscape:window-x="0"
+     inkscape:window-y="20"
+     inkscape:window-maximized="0" />
+  <metadata
+     id="metadata5">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+        <dc:title />
+        <cc:license
+           rdf:resource="http://creativecommons.org/licenses/by/4.0/" />
+        <dc:creator>
+          <cc:Agent>
+            <dc:title>Brandon Piatt</dc:title>
+          </cc:Agent>
+        </dc:creator>
+        <dc:date />
+      </cc:Work>
+      <cc:License
+         rdf:about="http://creativecommons.org/licenses/by/4.0/">
+        <cc:permits
+           rdf:resource="http://creativecommons.org/ns#Reproduction" />
+        <cc:permits
+           rdf:resource="http://creativecommons.org/ns#Distribution" />
+        <cc:requires
+           rdf:resource="http://creativecommons.org/ns#Notice" />
+        <cc:requires
+           rdf:resource="http://creativecommons.org/ns#Attribution" />
+        <cc:permits
+           rdf:resource="http://creativecommons.org/ns#DerivativeWorks" />
+      </cc:License>
+    </rdf:RDF>
+  </metadata>
+  <g
+     inkscape:label="Layer 1"
+     inkscape:groupmode="layer"
+     id="layer1"
+     transform="translate(0,-288.53333)">
+    <g
+       id="g4633">
+      <g
+         id="g4658"
+         style="fill:#000000;fill-opacity:0.86637932;stroke:#000000;stroke-width:0.079375;stroke-linecap:butt;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1">
+        <path
+           style="opacity:1;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.26458332;stroke-linecap:butt;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;paint-order:normal"
+           d="m 4.6470052,288.53336 -0.2641283,0.98065 a 3.2558134,3.2650476 47.972412 0 0 -1.1291916,0.14632 l -0.5043118,-0.87482 -1.2170664,0.70368 0.5061441,0.87798 a 3.2558134,3.2650476 47.972412 0 0 -0.6947804,0.90216 L 0.36543981,291.00857 3.3248448e-5,292.36525 0.97976599,292.62641 a 3.2558134,3.2650476 47.972412 0 0 0.14360451,1.12832 l -0.87642548,0.50676 0.7003462,1.2148 0.87959938,-0.50859 a 3.2558134,3.2650476 47.972412 0 0 0.9006569,0.69222 l -0.2635917,0.97866 1.3557057,0.36139 0.2641283,-0.98066 a 3.2558134,3.2650476 47.972412 0 0 1.1291916,-0.14632 l 0.5043119,0.87482 1.2170664,-0.70368 -0.5061442,-0.87799 a 3.2558134,3.2650476 47.972412 0 0 0.6947804,-0.90213 l 0.9782309,0.26073 0.3654066,-1.35666 -0.9797326,-0.26116 A 3.2558134,3.2650476 47.972412 0 0 7.343296,291.7786 l 0.8764257,-0.50676 -0.700346,-1.2148 -0.8795996,0.50858 a 3.2558134,3.2650476 47.972412 0 0 -0.9006569,-0.69221 l 0.2635918,-0.97867 z m 0.075415,2.41742 a 1.8895381,1.8797898 0 0 1 1.3362099,2.30245 1.8895381,1.8797898 0 0 1 -2.3143836,1.32932 1.8895381,1.8797898 0 0 1 -1.3362099,-2.30245 1.8895381,1.8797898 0 0 1 2.3143836,-1.32932 z"
+           id="rect819"
+           inkscape:connector-curvature="0"
+           inkscape:export-filename="/home/x/Documents/Programming/Python/Projects/colorstk/colorstk/media/rainbow_gear.png"
+           inkscape:export-xdpi="95.999817"
+           inkscape:export-ydpi="95.999817" />
+      </g>
+    </g>
+  </g>
+</svg>
