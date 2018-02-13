@@ -90,16 +90,24 @@
     background_color: 0.2, 0.2, 0.2, 1
     background_image: ''
     do_default_tab: False
-    tab_height: '30dp'
+    tab_height: '35dp'
 
 
 <StripLayout>:
+    padding: 0
+
     canvas:
         Color:
             rgba: 0.1, 0.1, 0.1, 1
         Rectangle:
             pos: self.pos
             size: self.size
+
+
+<TabbedPanelHeader>:
+    color: (1, 1, 1, 1) if self.state == 'down' else (1, 1, 1, 0.7)
+    background_normal: join(pkg_dir, 'data/tab_header.png')
+    background_down: join(pkg_dir, 'data/tab_header_selected.png')
 
 
 <InfoTab@TabbedPanelItem>:
@@ -226,25 +234,53 @@
             padding: '25dp'
 
             StackableRow:
-                spacing: '25dp'
+                spacing: '30dp'
+
+                canvas:
+                    Color:
+                        rgba: 0.15, 0.15, 0.15, 1
+                    Line:
+                        points:
+                            self.x+42.5, self.y, self.x+42.5, \
+                            self.y-12.5, self.right-42.5, self.y-12.5, \
+                            self.right-42.5, self.y
+                        width: dp(2)
+                    Line:
+                        points:
+                            self.center_x, self.y-12.5, \
+                            self.center_x, self.y-25
+                        width: dp(2)
 
                 ColorSelectBox:
                     id: color_select1
-                    width: '75dp'
+                    width: '85dp'
+
+                    #Label:
+                    #    pos: self.parent.pos
+                    #    size: self.parent.size
+                    #    text: '%s' % icon('icon_add')
+                    #    color: (0.15, 0.15, 0.15, 1) if not self.parent.color.alpha else self.parent.color
+                    #    font_size: '24dp'
+                    #    markup: True
+
                 ColorSelectBox:
                     id: color_select2
-                    width: '75dp'
+                    width: '85dp'
 
             Button:
                 size_hint: None, None
                 size: '200dp', '50dp'
                 text: 'Blend colors'
+                background_normal: join(pkg_dir, 'data/button.png')
+                background_down: join(pkg_dir, 'data/button_down.png')
                 on_release: knspace.lookup_screen.blend_colors()
 
             Button:
                 size_hint: None, None
                 size: '200dp', '50dp'
                 text: 'Random color'
+                background_normal: join(pkg_dir, 'data/button.png')
+                background_down: join(pkg_dir, 'data/button_down.png')
                 on_release: knspace.lookup_screen.random_color()
 
 

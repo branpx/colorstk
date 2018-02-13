@@ -67,7 +67,7 @@
 
     canvas:
         Color:
-            rgba: 0.2, 0.2, 0.2, 1
+            rgba: 0.15, 0.15, 0.15, 1
         Rectangle:
             pos: self.pos
             size: self.size
@@ -92,9 +92,26 @@
 <ScreenMenuItem@Button>:
     size_hint_y: None
     height: '60dp'
-    background_color: 0.2, 0.2, 0.2, 1
-    background_normal: ''
+    background_normal: join(pkg_dir, 'data/menu_button.png')
+    background_down: join(pkg_dir, 'data/plain_button_down.png')
     text_size: self.size[0]*0.9, None
-    color: 0.8, 0.8, 0.8, 1
+    color: 0.75, 0.75, 0.75, 1
     halign: 'left'
     markup: True
+
+
+<ActionItem>:
+    background_down: join(pkg_dir, 'data/plain_button_down.png')
+
+
+<ActionPreviousButton>:
+    background_down: self.background_normal
+
+
+<ActionDropDown>:
+    canvas:
+        Color:
+            rgba: 0.1, 0.1, 0.1, 1
+        Rectangle:
+            pos: self.pos
+            size: self.size

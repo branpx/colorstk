@@ -67,11 +67,11 @@
     size_hint: None, None
     size: '150dp', '175dp'
     title_size: '15dp'
-    background_color: 0.2, 0.2, 0.2, 1
+    overlay_color: 1, 1, 1, 0
 
-    canvas:
+    canvas.after:
         Color:
-            rgba: self.background_color
+            rgba: self.overlay_color
         Rectangle:
             pos: self.pos
             size: self.size
@@ -101,15 +101,35 @@
 
     Label:
         text: root.name
+        text_size: self.width, None
+        halign: 'center'
+        shorten: True
+        shorten_from: 'right'
+
+        canvas.before:
+            Color:
+                rgba: 0.2, 0.2, 0.2, 1
+            Rectangle:
+                pos: self.pos
+                size: self.size
+
     Label:
         color: 0.7, 0.7, 0.7, 1
         text: str(len(root.colors)) + ' colors'
+
+        canvas.before:
+            Color:
+                rgba: 0.15, 0.15, 0.15, 1
+            Rectangle:
+                pos: self.pos
+                size: self.size
 
 
 <PaletteColor>:
     size_hint: None, None
     size: '100dp', '100dp'
     border_color: 0.3, 0.3, 0.3, 1
+    border_width: 2
 
     canvas.before:
         Color:
@@ -123,7 +143,7 @@
             rgba: self.border_color
         Line:
             rectangle: self.x, self.y, self.width, self.height
-            width: dp(2)
+            width: dp(self.border_width)
             joint: 'miter'
 
 
@@ -152,6 +172,7 @@
     title: 'Palette Name'
     size_hint: None, None
     size: '200dp', '90dp'
+    separator_color: 0.7, 0.7, 0.7, 1
 
     TextInput:
         id: name_input

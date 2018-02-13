@@ -200,9 +200,9 @@ class Palette(GridLayout):
     def on_selected(self, instance, selected):
         """Changes appearance based on selection status."""
         if selected:
-            self.background_color = (0.4, 0.4, 0.4, 1)
+            self.overlay_color[3] = 0.5
         else:
-            self.background_color = (0.2, 0.2, 0.2, 1)
+            self.overlay_color[3] = 0
 
     def trigger_selection(self, dt):
         """Triggers the `PalettesScreen` selection mode."""
@@ -245,8 +245,10 @@ class PaletteColor(Widget):
         """Changes appearance based on selection status."""
         if selected:
             self.border_color = (0.8, 0.8, 0.8, 1)
+            self.border_width = 3
         else:
             self.border_color = (0.3, 0.3, 0.3, 1)
+            self.border_width = 2
 
     def trigger_selection(self, dt):
         """Triggers the `ColorsScreen` selection mode."""
