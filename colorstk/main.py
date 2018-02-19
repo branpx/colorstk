@@ -8,10 +8,12 @@ from kivy.garden import iconfonts
 from kivy.lang.builder import Builder
 from kivy.properties import (BooleanProperty,
                              ListProperty,
+                             NumericProperty,
                              ObjectProperty,
                              StringProperty)
 from kivy.uix.behaviors.knspace import knspace
 from kivy.uix.boxlayout import BoxLayout
+from kivy.uix.checkbox import CheckBox
 from kivy.uix.modalview import ModalView
 from kivy.uix.screenmanager import NoTransition, ScreenManager
 from kivy.uix.settings import SettingItem, SettingsWithNoMenu
@@ -40,9 +42,30 @@ class OptionsTogglePopup(PopupWithActionBar):
     """A `PopupWithActionBar` for toggling options."""
 
     setting_item = ObjectProperty()
+    max_height = NumericProperty()
+
+    def set_height(self, content_height):
+        """Sets the height to fit the content."""
+        full_height = self.ids.action_bar.height + content_height
+        if full_height > self.max_height:
+            self.height = self.max_height
+        else:
+            self.height = full_height
 
     def on_dismiss(self):
         self.setting_item.write_option()
+
+
+class SettingToggle(SettingItem):
+    """A `SettingItem` that allows toggling a single option."""
+
+    values = ListProperty(['0', '1'])
+
+    def on_touch_down(self, touch):
+        """Toggles the option."""
+        super(SettingToggle, self).on_touch_down(touch)
+        if self.collide_point(*touch.pos):
+            self.ids.check_box.active = not self.ids.check_box.active
 
 
 class SettingOptionsToggle(SettingItem):
@@ -134,9 +157,12 @@ class ColorsTKApp(App):
 
     def build_settings(self, settings):
         """Adds the settings panel and creates the settings popup."""
+        settings.register_type('toggle', SettingToggle)
         settings.register_type('options_toggle', SettingOptionsToggle)
         json_panel = json.dumps([
-            {'type': 'bool',
+            {'type': 'title',
+             'title': 'Interface'},
+            {'type': 'toggle',
              'title': 'Detach values',
              'desc': 'Display values to the left of the tabbed panel',
              'section': 'ui',
@@ -149,6 +175,8 @@ class ColorsTKApp(App):
              'multi_toggle': True,
              'options': ['Hex', 'sRGB', 'HSL', 'HSV', 'YIQ', 'YUV',
                          'CIE-XYZ', 'CIE-LAB', 'CMY', 'CMYK']},
+            {'type': 'title',
+             'title': 'Color Settings'},
             {'type': 'options_toggle',
              'title': 'White point',
              'desc': 'White reference point for CIE-LAB conversions',
@@ -170,7 +198,7 @@ class ColorsTKApp(App):
              'key': 'scheme_mode',
              'options': ['RGB', 'RYB']}
         ])
-        settings.add_json_panel('Settings', self.config, data=json_panel)
+        settings.add_json_panel('', self.config, data=json_panel)
 
         self.settings_popup = PopupWithActionBar(
             title='Settings', icon=join(self.pkg_dir, 'data/settings.png'))

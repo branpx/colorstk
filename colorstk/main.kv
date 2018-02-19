@@ -1,6 +1,7 @@
 #:import join os.path.join
 
 #:import App kivy.app.App
+#:import Window kivy.core.window.Window
 #:import Factory kivy.factory.Factory
 #:import icon kivy.garden.iconfonts.icon
 #:import knspace kivy.uix.behaviors.knspace.knspace
@@ -21,6 +22,7 @@
             size: self.size
 
     ActionBar:
+        id: action_bar
         ActionView:
             ActionPrevious:
                 title: root.title
@@ -47,7 +49,8 @@
 
 
 <OptionsTogglePopup>:
-    size_hint: 0.6, 0.8
+    size_hint: 0.6, None
+    max_height: Window.height * 0.8
 
     ScrollView:
         GridLayout:
@@ -55,6 +58,27 @@
             cols: 1
             size_hint_y: None
             height: self.minimum_height
+            on_height: root.set_height(self.height)
+
+
+<ToggleButton>:
+    background_color: 0.75, 0.75, 0.75, 1
+
+
+<SettingToggle>:
+    CheckBox:
+        id: check_box
+        active:
+            bool(root.values.index(root.value)) \
+            if root.value in root.values else False
+        on_active: root.value = root.values[int(args[1])]
+
+
+<-SettingsPanel>:
+    size_hint_y: None
+    height: self.minimum_height
+    padding: '5dp'
+    spacing: '5dp'
 
 
 <ScreenMenu@ModalView>:
