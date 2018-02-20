@@ -23,6 +23,7 @@ from kivy.uix.widget import Widget
 
 class PalettesScreen(KNSpaceBehavior, BoxLayout, Screen):
     """A screen for creating and displaying color palettes."""
+
     mode = StringProperty()
 
     def __init__(self, **kwargs):
@@ -87,6 +88,7 @@ class PalettesScreen(KNSpaceBehavior, BoxLayout, Screen):
 
 class ColorsScreen(KNSpaceBehavior, BoxLayout, Screen):
     """A `Screen` for displaying the colors in a `Palette`."""
+
     mode = StringProperty()
 
     def __init__(self, **kwargs):
@@ -148,12 +150,16 @@ class ColorsScreen(KNSpaceBehavior, BoxLayout, Screen):
 class SelectableStack(CompoundSelectionBehavior, StackLayout):
     """A `StackLayout` that allows selecting its children."""
 
+    drag_mode = StringProperty()
+
     def select_node(self, node):
         node.selected = True
+        self.drag_mode = 'select'
         return super(SelectableStack, self).select_node(node)
 
     def deselect_node(self, node):
         node.selected = False
+        self.drag_mode = 'deselect'
         super(SelectableStack, self).deselect_node(node)
 
 
@@ -168,18 +174,24 @@ class Palette(GridLayout):
         """Selects `self` if in selection mode."""
         if self.collide_point(*touch.pos):
             touch.grab(self)
-
             if knspace.palettes_screen.mode == 'normal':
                 clock_event = Clock.schedule_once(self.trigger_selection, 1)
                 touch.ud['trigger_selection'] = clock_event
-
             elif knspace.palettes_screen.mode == 'selection':
                 self.parent.select_with_touch(self, touch)
 
     def on_touch_move(self, touch):
-        """Unschedules the clock event if the touch moved outside."""
+        """Selects or deselects `self` when dragging."""
+        # Unschedule the clock event if the touch moved outside.
         if touch.grab_current is self and not self.collide_point(*touch.pos):
             Clock.unschedule(touch.ud.get('trigger_selection'))
+
+        if knspace.palettes_screen.mode == 'selection':
+            if touch.grab_current is not self and self.collide_point(*touch.pos):
+                if not self.selected and self.parent.drag_mode == 'select':
+                    self.parent.select_with_touch(self, touch)
+                elif self.selected and self.parent.drag_mode == 'deselect':
+                    self.parent.select_with_touch(self, touch)
 
     def on_touch_up(self, touch):
         """Adds color if in add mode, otherwise loads the colors."""
@@ -227,9 +239,17 @@ class PaletteColor(Widget):
                 self.parent.select_with_touch(self, touch)
 
     def on_touch_move(self, touch):
-        """Unschedules the clock event if the touch moved outside."""
+        """Selects or deselects `self` when dragging."""
+        # Unschedule the clock event if the touch moved outside.
         if touch.grab_current is self and not self.collide_point(*touch.pos):
             Clock.unschedule(touch.ud.get('trigger_selection'))
+
+        if knspace.colors_screen.mode == 'selection':
+            if touch.grab_current is not self and self.collide_point(*touch.pos):
+                if not self.selected and self.parent.drag_mode == 'select':
+                    self.parent.select_with_touch(self, touch)
+                elif self.selected and self.parent.drag_mode == 'deselect':
+                    self.parent.select_with_touch(self, touch)
 
     def on_touch_up(self, touch):
         """Switches to the color if in normal mode."""

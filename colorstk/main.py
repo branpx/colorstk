@@ -13,7 +13,6 @@ from kivy.properties import (BooleanProperty,
                              StringProperty)
 from kivy.uix.behaviors.knspace import knspace
 from kivy.uix.boxlayout import BoxLayout
-from kivy.uix.checkbox import CheckBox
 from kivy.uix.modalview import ModalView
 from kivy.uix.screenmanager import NoTransition, ScreenManager
 from kivy.uix.settings import SettingItem, SettingsWithNoMenu
