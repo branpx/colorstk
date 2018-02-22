@@ -146,7 +146,8 @@ class ColorsTKApp(App):
         config.setdefaults('ui', {
             'detach_values': 0,
             'color_spaces': json.dumps(
-                ['Hex', 'sRGB', 'HSL', 'HSV', 'CIE-XYZ', 'CIE-LAB'])
+                ['Hex', 'sRGB', 'HSL', 'HSV', 'CIE-XYZ', 'CIE-LAB']),
+            'value_range': '0-255'
         })
         config.setdefaults('color', {
             'white_point': 'D65',
@@ -174,8 +175,14 @@ class ColorsTKApp(App):
              'multi_toggle': True,
              'options': ['Hex', 'sRGB', 'HSL', 'HSV', 'YIQ', 'YUV',
                          'CIE-XYZ', 'CIE-LAB', 'CMY', 'CMYK']},
+            {'type': 'options_toggle',
+             'title': 'Value range',
+             'desc': 'Range for RGB values',
+             'section': 'ui',
+             'key': 'value_range',
+             'options': ['0-1', '0-255']},
             {'type': 'title',
-             'title': 'Color Settings'},
+             'title': 'Color Options'},
             {'type': 'options_toggle',
              'title': 'White point',
              'desc': 'White reference point for CIE-LAB conversions',
@@ -213,6 +220,8 @@ class ColorsTKApp(App):
             lookup_screen.detach_values = int(value)
         elif key == 'color_spaces':
             lookup_screen.color_spaces = json.loads(value)
+        elif key == 'value_range':
+            lookup_screen.value_range = value
         elif key == 'white_point':
             lookup_screen.set_white_point(
                 value, config.get('color', 'observer_angle'))

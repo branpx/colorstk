@@ -37,6 +37,7 @@ class LookupScreen(KNSpaceBehavior, BoxLayout, Screen):
     ryb_hue = NumericProperty()
     white_point = ListProperty()
     scheme_mode = StringProperty()
+    value_range = StringProperty()
     color_spaces = ListProperty()
     detach_values = BooleanProperty()
 
@@ -48,6 +49,7 @@ class LookupScreen(KNSpaceBehavior, BoxLayout, Screen):
         observer_angle = config.get('color', 'observer_angle')
         self.set_white_point(white_point_name, observer_angle)
         self.scheme_mode = config.get('color', 'scheme_mode').lower()
+        self.value_range = config.get('ui', 'value_range')
         self.color_spaces = json.loads(config.get('ui', 'color_spaces'))
         self.detach_values = int(config.get('ui', 'detach_values'))
 
@@ -90,7 +92,10 @@ class LookupScreen(KNSpaceBehavior, BoxLayout, Screen):
         if color_space == 'Hex':
             return [self.color.html]
         elif color_space == 'sRGB':
-            return list(self.color.ints)
+            if self.value_range == '0-255':
+                return list(self.color.ints)
+            elif self.value_range == '0-1':
+                return list(self.color.rgb)
         elif color_space == 'HSL':
             return list(self.color.hsl)
         elif color_space == 'HSV':
@@ -139,6 +144,13 @@ class LookupScreen(KNSpaceBehavior, BoxLayout, Screen):
                 self.schemes_tab.ids.analogous_grid.children,
                 self.color.make_analogous_scheme(mode=self.scheme_mode)):
             color_box.color = color
+
+    def on_value_range(self, instance, value_range):
+        """Reloads the sRGB `ValueDisplay`."""
+        for value_display in self.value_view.ids.value_grid.children:
+            if value_display.color_space == 'sRGB':
+                value_display.value = self.get_value(value_display.color_space)
+                value_display.update_inputs()
 
     def on_color_spaces(self, instance, color_spaces):
         """Removes `ValueDisplay` widgets and reloads them."""
@@ -292,8 +304,9 @@ class ValueDisplay(GridLayout):
             lookup_screen.color = grapefruit.Color.from_html(
                 *self.value, wref=white_point)
         elif self.color_space == 'sRGB':
-            # Convert RGB values from range 0-255 to range 0-1.
-            self.value = [val / 255 for val in self.value]
+            if lookup_screen.value_range == '0-255':
+                # Convert RGB values from range 0-255 to range 0-1.
+                self.value = [val / 255 for val in self.value]
             lookup_screen.color = grapefruit.Color.from_rgb(
                 *self.value, wref=white_point)
         elif self.color_space == 'HSL':
