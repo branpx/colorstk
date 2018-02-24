@@ -29,12 +29,8 @@
         SelectableStack:
             id: palette_stack
             size_hint_min_x: '200dp'
-            size_hint_y: None
-            height: self.minimum_height
             padding: '25dp', '25dp'
             spacing: '25dp'
-            multiselect: True
-            touch_multiselect: True
 
 
 <ColorsScreen>:
@@ -55,12 +51,16 @@
         SelectableStack:
             id: color_stack
             size_hint_min_x: '130dp'
-            size_hint_y: None
-            height: self.minimum_height
             padding: '15dp', '15dp'
             spacing: '15dp'
-            multiselect: True
-            touch_multiselect: True
+
+
+<SelectableStack>:
+    size_hint_y: None
+    height: self.minimum_height
+    multiselect: True
+    touch_multiselect: True
+
 
 <Palette>:
     cols: 1

@@ -191,6 +191,8 @@ class LookupScreen(KNSpaceBehavior, BoxLayout, Screen):
         self.ids.content.add_widget(self.tabbed_panel)
 
     def set_color(self, value):
+        """Sets the color from RGB values."""
+        self.add_to_history(self.color)
         self.color = grapefruit.Color(tuple(value), wref=self.white_point)
 
     def set_white_point(self, name, observer):
