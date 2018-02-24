@@ -305,7 +305,7 @@ class ValueDisplay(GridLayout):
                 *self.value, wref=white_point)
         elif self.color_space == 'sRGB':
             if lookup_screen.value_range == '0-255':
-                # Convert RGB values from range 0-255 to range 0-1.
+                # Convert RGB values from range 0-255 to range 0-1
                 self.value = [val / 255 for val in self.value]
             lookup_screen.color = grapefruit.Color.from_rgb(
                 *self.value, wref=white_point)

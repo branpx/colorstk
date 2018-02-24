@@ -94,7 +94,7 @@ class SettingOptionsToggle(SettingItem):
                 value_list.append(toggle_button.text)
             elif toggle_button.state == 'normal':
                 value_list.remove(toggle_button.text)
-            # Preserve the order of the options.
+            # Preserve the order of the options
             value_list = [option for option in self.options
                           if option in value_list]
             self.temp_value = json.dumps(value_list)
