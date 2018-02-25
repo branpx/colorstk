@@ -34,7 +34,7 @@
 
 <AboutPopup>:
     title: 'About'
-    icon: join(pkg_dir, 'data/about.png')
+    icon: join(pkg_dir, 'atlas://data/theme/about')
     size_hint: 0.6, 0.8
 
     TextInput:
@@ -116,8 +116,8 @@
 <ScreenMenuItem@Button>:
     size_hint_y: None
     height: '60dp'
-    background_normal: join(pkg_dir, 'data/menu_button.png')
-    background_down: join(pkg_dir, 'data/plain_button_down.png')
+    background_normal: join(pkg_dir, 'atlas://data/theme/menu_button')
+    background_down: join(pkg_dir, 'atlas://data/theme/plain_button_down')
     text_size: self.size[0]*0.9, None
     color: 0.75, 0.75, 0.75, 1
     halign: 'left'
@@ -125,7 +125,7 @@
 
 
 <ActionItem>:
-    background_down: join(pkg_dir, 'data/plain_button_down.png')
+    background_down: join(pkg_dir, 'atlas://data/theme/plain_button_down')
 
 
 <ActionPreviousButton>:
