@@ -35,17 +35,64 @@
 <AboutPopup>:
     title: 'About'
     icon: join(pkg_dir, 'atlas://data/theme/about')
-    size_hint: 0.6, 0.8
+    size_hint: 0.7, 0.8
 
-    TextInput:
-        text:
-            """Colors Toolkit\n
-            Copyright (c) 2017 Brandon Piatt\n
-            """
-        foreground_color: 1, 1, 1, 1
-        background_color: 0, 0, 0, 0
-        cursor_color: 0, 0, 0, 0
-        readonly: True
+    ScrollView:
+        Label:
+            size_hint_y: None
+            height: self.texture_size[1]
+            text:
+                u"""[size=28dp][b]Colors Toolkit[/b][/size]\n
+                Copyright \u00A9 2017-2018 Brandon Piatt\n
+                Colors Toolkit is licensed under the \
+                [ref=MIT][color=#0088EE]\
+                MIT License[/color][/ref]\n
+                [size=22dp][b]Source[/b][/size]\n
+                The source code for this software can be found at \
+                [ref=https://github.com/branpx/colorstk][color=#0088EE]\
+                https://github.com/branpx/colorstk[/color][/ref]\n
+                [size=22dp][b]Licenses[/b][/size]\n
+                Colors Toolkit may include portions of \
+                the following open source software:\n
+                [b]GrapeFruit[/b]
+                Copyright \u00A9 2008-2016 Xavier Basty
+                [ref=Apache][color=#0088EE]\
+                Apache License 2.0[/color][/ref]\n
+                [b]Kivy[/b]
+                Copyright \u00A9 2010-2018 Kivy Team and other contributors
+                [ref=MIT][color=#0088EE]\
+                MIT License[/color][/ref]\n
+                [b]Kivy-iconfonts[/b]
+                Copyright \u00A9 2010-2015 Kivy Team and other contributors
+                [ref=MIT][color=#0088EE]\
+                MIT License[/color][/ref]\n
+                [b]PyJNIus[/b]
+                Copyright \u00A9 2010-2017 Kivy Team and other contributors
+                [ref=MIT][color=#0088EE]\
+                MIT License[/color][/ref]\n
+                [b]Python[/b]
+                Copyright \u00A9 2001-2018 Python Software Foundation
+                [ref=PSF][color=#0088EE]\
+                PSF License Version 2[/color][/ref]\n
+                [b]python-for-android[/b]
+                Copyright \u00A9 2010-2017 Kivy Team and other contributors
+                [ref=MIT][color=#0088EE]\
+                MIT License[/color][/ref]\n
+                [b]SDL[/b]
+                Copyright \u00A9 1997-2018 Sam Lantinga
+                [ref=SDL][color=#0088EE]\
+                zlib License[/color][/ref]\n
+                [b]Six[/b]
+                Copyright \u00A9 2010-2018 Benjamin Peterson
+                [ref=MIT][color=#0088EE]\
+                MIT License[/color][/ref]
+                """
+            text_size: self.width, None
+            padding: '10dp', '10dp'
+            halign: 'left'
+            valign: 'top'
+            markup: True
+            on_ref_press: root.open_link(args[1])
 
 
 <OptionsTogglePopup>:

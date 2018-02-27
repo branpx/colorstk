@@ -2,6 +2,7 @@
 
 import json
 from os.path import dirname, join
+import webbrowser
 
 from kivy.app import App
 from kivy.garden import iconfonts
@@ -34,7 +35,16 @@ class PopupWithActionBar(BoxLayout, ModalView):
 class AboutPopup(PopupWithActionBar):
     """A `PopupWithActionBar` showing license information."""
 
-    pass
+    LICENSE_LINKS = {
+        'Apache': 'https://www.apache.org/licenses/LICENSE-2.0.html',
+        'MIT': 'https://opensource.org/licenses/MIT',
+        'PSF': 'https://www.python.org/download/releases/2.7/license/',
+        'SDL': 'https://www.libsdl.org/license.php'
+    }
+
+    def open_link(self, link):
+        link = self.LICENSE_LINKS.get(link, link)
+        webbrowser.open(link)
 
 
 class OptionsTogglePopup(PopupWithActionBar):
