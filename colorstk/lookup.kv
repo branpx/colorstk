@@ -241,14 +241,14 @@
                         rgba: 0.15, 0.15, 0.15, 1
                     Line:
                         points:
-                            self.x+42.5, self.y, self.x+42.5, \
-                            self.y-12.5, self.right-42.5, self.y-12.5, \
-                            self.right-42.5, self.y
+                            self.x+dp(42.5), self.y, self.x+dp(42.5), \
+                            self.y-dp(12.5), self.right-dp(42.5), \
+                            self.y-dp(12.5), self.right-dp(42.5), self.y
                         width: dp(2)
                     Line:
                         points:
-                            self.center_x, self.y-12.5, \
-                            self.center_x, self.y-25
+                            self.center_x, self.y-dp(12.5), \
+                            self.center_x, self.y-dp(25)
                         width: dp(2)
 
                 ColorSelectBox:
@@ -320,6 +320,6 @@
     foreground_color: 1, 1, 1, 1
     background_color: 0, 0, 0, 0
     cursor_color: 0, 0, 0, 0
-    padding: 0, 12, 0, 0
+    padding: 0, '12dp', 0, 0
     multiline: False
     readonly: True
