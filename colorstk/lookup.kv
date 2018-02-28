@@ -6,7 +6,7 @@
         ActionView:
             ActionPrevious:
                 title: '    Lookup'
-                app_icon: join(pkg_dir, 'atlas://data/theme/menu')
+                app_icon: 'atlas://' + join(pkg_dir, 'data/theme/menu')
                 app_icon_width: '20dp'
                 app_icon_height: '20dp'
                 with_previous: False
@@ -106,8 +106,8 @@
 
 <TabbedPanelHeader>:
     color: (1, 1, 1, 1) if self.state == 'down' else (1, 1, 1, 0.7)
-    background_normal: join(pkg_dir, 'atlas://data/theme/tab_header')
-    background_down: join(pkg_dir, 'atlas://data/theme/tab_header_selected')
+    background_normal: 'atlas://' + join(pkg_dir, 'data/theme/tab_header')
+    background_down: 'atlas://' + join(pkg_dir, 'data/theme/tab_header_selected')
 
 
 <InfoTab@TabbedPanelItem>:
@@ -255,14 +255,6 @@
                     id: color_select1
                     width: '85dp'
 
-                    #Label:
-                    #    pos: self.parent.pos
-                    #    size: self.parent.size
-                    #    text: '%s' % icon('icon_add')
-                    #    color: (0.15, 0.15, 0.15, 1) if not self.parent.color.alpha else self.parent.color
-                    #    font_size: '24dp'
-                    #    markup: True
-
                 ColorSelectBox:
                     id: color_select2
                     width: '85dp'
@@ -271,16 +263,16 @@
                 size_hint: None, None
                 size: '200dp', '50dp'
                 text: 'Blend colors'
-                background_normal: join(pkg_dir, 'atlas://data/theme/button')
-                background_down: join(pkg_dir, 'atlas://data/theme/button_down')
+                background_normal: 'atlas://' + join(pkg_dir, 'data/theme/button')
+                background_down: 'atlas://' + join(pkg_dir, 'data/theme/button_down')
                 on_release: knspace.lookup_screen.blend_colors()
 
             Button:
                 size_hint: None, None
                 size: '200dp', '50dp'
                 text: 'Random color'
-                background_normal: join(pkg_dir, 'atlas://data/theme/button')
-                background_down: join(pkg_dir, 'atlas://data/theme/button_down')
+                background_normal: 'atlas://' + join(pkg_dir, 'data/theme/button')
+                background_down: 'atlas://' + join(pkg_dir, 'data/theme/button_down')
                 on_release: knspace.lookup_screen.random_color()
 
 

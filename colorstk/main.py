@@ -217,7 +217,8 @@ class ColorsTKApp(App):
         settings.add_json_panel('', self.config, data=json_panel)
 
         self.settings_popup = PopupWithActionBar(
-            title='Settings', icon=join(self.pkg_dir, 'atlas://data/theme/settings'))
+            title='Settings',
+            icon='atlas://'+join(self.pkg_dir, 'data/theme/settings'))
         self.settings_popup.add_widget(settings)
 
     def display_settings(self, settings):
