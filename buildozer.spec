@@ -7,7 +7,7 @@ title = Colors Toolkit
 package.name = colorstk
 
 # (str) Package domain (needed for android/ios packaging)
-package.domain = org.colorstk
+package.domain = org.branpx
 
 # (str) Source code where the main.py live
 source.dir = ./colorstk
@@ -28,11 +28,11 @@ source.include_exts = py,png,jpg,kv,atlas,ttf,fontd
 #source.exclude_patterns = license,images/*/*.jpg
 
 # (str) Application versioning (method 1)
-version = 0.1
+#version =
 
 # (str) Application versioning (method 2)
-# version.regex = __version__ = ['"](.*)['"]
-# version.filename = %(source.dir)s/main.py
+version.regex = __version__ = ["\']([^"\']*)["\']
+version.filename = %(source.dir)s/__init__.py
 
 # (list) Application requirements
 # comma seperated e.g. requirements = sqlite3,kivy
@@ -47,13 +47,13 @@ requirements = kivy,android,git+https://github.com/xav/grapefruit.git
 garden_requirements = iconfonts
 
 # (str) Presplash of the application
-#presplash.filename = %(source.dir)s/data/presplash.png
+presplash.filename = %(source.dir)s/data/presplash.png
 
 # (str) Icon of the application
-#icon.filename = %(source.dir)s/data/icon.png
+icon.filename = %(source.dir)s/data/app_icon-512.png
 
 # (str) Supported orientation (one of landscape, portrait or all)
-orientation = portrait
+orientation = all
 
 # (list) List of service to declare
 #services = NAME:ENTRYPOINT_TO_PY,NAME2:ENTRYPOINT2_TO_PY
@@ -83,7 +83,7 @@ fullscreen = 0
 # red, blue, green, black, white, gray, cyan, magenta, yellow, lightgray,
 # darkgray, grey, lightgrey, darkgrey, aqua, fuchsia, lime, maroon, navy,
 # olive, purple, silver, teal.
-#android.presplash_color = #FFFFFF
+android.presplash_color = #111111
 
 # (list) Permissions
 #android.permissions = INTERNET
@@ -92,7 +92,7 @@ fullscreen = 0
 #android.api = 19
 
 # (int) Minimum API required
-#android.minapi = 9
+android.minapi = 13
 
 # (int) Android SDK version to use
 #android.sdk = 20

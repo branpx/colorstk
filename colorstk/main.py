@@ -5,6 +5,7 @@ from os.path import dirname, join
 import webbrowser
 
 from kivy.app import App
+from kivy.config import Config
 from kivy.garden import iconfonts
 from kivy.lang.builder import Builder
 from kivy.properties import (BooleanProperty,
@@ -134,9 +135,11 @@ class ColorsTKApp(App):
         """Initializes `ColorsTKApp`."""
         self.use_kivy_settings = False
         self.settings_cls = SettingsWithNoMenu
-        self.title = 'Colors Toolkit'
-        self.icon = 'media/colorstk_icon.png'
         self.pkg_dir = dirname(__file__)
+        self.title = 'Colors Toolkit'
+        self.icon = join(self.pkg_dir, 'data/app_icon-32.png')
+
+        Config.set('kivy', 'exit_on_escape', '0')
 
         iconfonts.register('colorstk',
                            join(self.pkg_dir, 'data/icons'),
