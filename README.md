@@ -1,14 +1,13 @@
 Colors Toolkit
 ==============
 
-<img align="right" height="256" 
-src="https://raw.githubusercontent.com/branpx/colorstk/master/colorstk/data/app_icon-256.png"/>
+<img align="right" height="196" 
+src="https://raw.githubusercontent.com/branpx/colorstk/master/colorstk/data/app_icon-196.png"/>
 
 Colors Toolkit is a simple app for looking up color values.
 
 Features:
 
-- Basic color info
 - Color space conversions
 - Color schemes
 - Blending colors
