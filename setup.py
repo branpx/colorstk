@@ -28,8 +28,7 @@ class PostInstall(install):
         install.run(self)
 
 
-version_file = join(dirname(__file__), 'colorstk', '__init__.py')
-with open(version_file) as vfile:
+with open(join(dirname(__file__), 'colorstk/__init__.py')) as vfile:
     lines = vfile.readlines()
 for line in lines:
     line = line.strip()
